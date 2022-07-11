@@ -9,7 +9,7 @@ export const AppDataSource = new DataSource({
   username: 'postgres',
   password: 'fusion',
   database: 'testdb',
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: [User],
   migrations: [],
@@ -19,3 +19,5 @@ export const AppDataSource = new DataSource({
 export const connect = () => {
   return AppDataSource.initialize();
 };
+
+export const usersRepository = AppDataSource.getRepository(User);

@@ -14,9 +14,9 @@ const createCustomError = <P>(
   const error = new Error(message) as ExtendedError<P>;
 
   error.customErrorData = {
-    payload,
     message,
     code,
+    payload,
   };
 
   return error;

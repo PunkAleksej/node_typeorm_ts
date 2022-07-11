@@ -4,15 +4,16 @@ import deleteUser from '../controllers/users/deleteUser';
 import updateUser from '../controllers/users/update';
 import getUser from '../controllers/users/getMe';
 import getAllUsers from '../controllers/users/getAllUsers';
+import jwtCheker from '../middlewares/jwtChecker';
 
 const userRouter = Router();
 
-userRouter.delete('/:id', deleteUser);
+userRouter.delete('/:id', jwtCheker, deleteUser);
 
-userRouter.patch('/:id', updateUser);
+userRouter.patch('/:id', jwtCheker, updateUser);
 
 userRouter.get('/:id', getUser);
 
-userRouter.get('/all/:id', getAllUsers);
+userRouter.get('/all/:id', jwtCheker, getAllUsers);
 
 export default userRouter;

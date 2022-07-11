@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-
+import createCustomError from './createCustomError';
 import config from '../config';
 
 const generateAccessToken = (id: string) => {
@@ -8,7 +8,16 @@ const generateAccessToken = (id: string) => {
 };
 
 const validateAccessToken = (token: string) => {
-  return jwt.verify(token, config.tokenSecretKey);
+  try {
+    return jwt.verify(token, config.tokenSecretKey);
+  } catch (err) {
+    if (err.message === 'jwt expired') {
+      throw createCustomError(401, 'jwt expired');
+    }
+    if (err.message === 'invalid signature') {
+      throw createCustomError(401, 'invalid token');
+    }
+  }
 };
 
 export default { validateAccessToken, generateAccessToken };

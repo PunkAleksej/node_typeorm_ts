@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
 import { User } from '../../db/User';
-import { AppDataSource } from '../../db/dataSource';
+import { usersRepository, AppDataSource } from '../../db/dataSource';
 import passHasher from '../../utils/passHasher';
 import createCustomError from '../../utils/createCustomError';
 
 const signUp = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const { firstName, lastName, email, password } = request.body;
-    const usersRepository = AppDataSource.getRepository(User);
     const emailCheck = await usersRepository.findOneBy({ email });
     if (emailCheck) {
       throw createCustomError(400, 'The user already exists');
