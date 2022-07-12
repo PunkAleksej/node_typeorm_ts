@@ -14,7 +14,14 @@ const parsedEnv = {
 };
 
 const config = {
-  db: {},
+  db: {
+    type: parsedEnv.DB_TYPE,
+    host: parsedEnv.DB_HOST,
+    port: +parsedEnv.DB_PORT,
+    userName: parsedEnv.DB_USERNAME,
+    password: parsedEnv.DB_PASSWORD,
+    dataBase: parsedEnv.DB_DATABASE,
+  },
   port: +parsedEnv.CONNECTION_PORT,
   passwordSecretKey: parsedEnv.PASSWORD_SALT,
   tokenSecretKey: parsedEnv.JWT_TOKEN_SECRET_KEY,

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import createCustomError from '../../utils/createCustomError';
 import jwtTools from '../../utils/jwtTools';
 
@@ -6,14 +7,14 @@ const testToken = async (request: Request, response: Response, next: NextFunctio
   try {
     const token = request.headers.authorization;
     if (!token) {
-      throw createCustomError(407, 'Proxy Authentication Required');
+      throw createCustomError(StatusCodes.BAD_REQUEST, 'Proxy Authentication Required');
     }
     if (!jwtTools.validateAccessToken(token)) {
-      throw createCustomError(400, 'Value token param is broken');
+      throw createCustomError(StatusCodes.UNAUTHORIZED, 'Value token param is broken');
     }
     const validateTokenAnswer = jwtTools.validateAccessToken(token);
 
-    response.status(200).json({
+    response.status(StatusCodes.ACCEPTED).json({
       message: validateTokenAnswer,
     });
   } catch (err) {

@@ -1,6 +1,11 @@
 import jwt from 'jsonwebtoken';
+import { StatusCodes } from 'http-status-codes';
 import createCustomError from './createCustomError';
 import config from '../config';
+
+export interface Payload {
+  id: string;
+}
 
 const generateAccessToken = (id: string) => {
   const payload = { id };
@@ -9,14 +14,15 @@ const generateAccessToken = (id: string) => {
 
 const validateAccessToken = (token: string) => {
   try {
-    return jwt.verify(token, config.tokenSecretKey);
+    return (jwt.verify(token, config.tokenSecretKey)) as Payload;
   } catch (err) {
     if (err.message === 'jwt expired') {
-      throw createCustomError(401, 'jwt expired');
+      throw createCustomError(StatusCodes.BAD_REQUEST, 'jwt expired');
     }
     if (err.message === 'invalid signature') {
-      throw createCustomError(401, 'invalid token');
+      throw createCustomError(StatusCodes.BAD_REQUEST, 'invalid token');
     }
+    throw err;
   }
 };
 

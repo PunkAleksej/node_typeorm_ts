@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import { User } from '../../db/User';
 import { usersRepository, AppDataSource } from '../../db/dataSource';
 import passHasher from '../../utils/passHasher';
@@ -9,7 +10,7 @@ const signUp = async (request: Request, response: Response, next: NextFunction) 
     const { firstName, lastName, email, password } = request.body;
     const emailCheck = await usersRepository.findOneBy({ email });
     if (emailCheck) {
-      throw createCustomError(400, 'The user already exists');
+      throw createCustomError(StatusCodes.BAD_REQUEST, 'The user already exists');
     }
     const user = new User();
     user.firstName = firstName;
@@ -17,7 +18,7 @@ const signUp = async (request: Request, response: Response, next: NextFunction) 
     user.password = passHasher.passHasher(password);
     user.email = email;
     await AppDataSource.manager.save(user);
-    return response.status(201).json({ message: 'registration complete' });
+    return response.status(StatusCodes.ACCEPTED).json({ message: 'registration complete' });
   } catch (err) {
     next(err);
   }

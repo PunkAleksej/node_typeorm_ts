@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
 import passHasher from '../../utils/passHasher';
 import { usersRepository } from '../../db/dataSource';
 
@@ -24,7 +25,7 @@ const updateUser = async (request: Request, response: Response, next: NextFuncti
       userToUpdate.lastName = lastName;
     }
     await usersRepository.save(userToUpdate);
-    response.status(200).json({ userToUpdate });
+    response.status(StatusCodes.ACCEPTED).json({ userToUpdate });
   } catch (err) {
     next(err);
   }
