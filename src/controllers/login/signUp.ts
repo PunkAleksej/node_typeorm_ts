@@ -1,11 +1,20 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { User } from '../../db/User';
 import { usersRepository, AppDataSource } from '../../db/dataSource';
 import passHasher from '../../utils/passHasher';
 import createCustomError from '../../utils/createCustomError';
 
-const signUp = async (request: Request, response: Response, next: NextFunction) => {
+type signUpRequest = {
+  body: {
+    firstName: string;
+    lastName:string;
+    email: string;
+    password: string;
+  }
+}
+
+const signUp = async (request: signUpRequest, response: Response, next: NextFunction) => {
   try {
     const { firstName, lastName, email, password } = request.body;
     const emailCheck = await usersRepository.findOneBy({ email });

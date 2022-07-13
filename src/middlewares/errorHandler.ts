@@ -1,8 +1,17 @@
 import { ErrorRequestHandler, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface ExtendedError extends Error {
+  customErrorData?: {
+    code: number;
+    message: string;
+    payload: object;
+  },
+}
+
 const errorHandler: ErrorRequestHandler = (
-  err, req, res, next: NextFunction,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  err: ExtendedError, req: never, res, next: NextFunction,
 ) => {
   if (err.customErrorData) {
     return res
@@ -11,7 +20,7 @@ const errorHandler: ErrorRequestHandler = (
   }
 
   return res
-    .status(500)
+    .status(StatusCodes.INTERNAL_SERVER_ERROR)
     .json({ message: 'unknown error' });
 };
 

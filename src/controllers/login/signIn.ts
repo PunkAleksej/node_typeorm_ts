@@ -1,11 +1,18 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { usersRepository } from '../../db/dataSource';
 import jwtTools from '../../utils/jwtTools';
 import passHasher from '../../utils/passHasher';
 import createCustomError from '../../utils/createCustomError';
 
-const loginUser = async (request: Request, response: Response, next: NextFunction) => {
+type signInRequest = {
+  body: {
+    email: string;
+    password: string;
+  }
+}
+
+const loginUser = async (request: signInRequest, response: Response, next: NextFunction) => {
   try {
     const { email, password } = request.body;
     const user = await usersRepository.findOneBy({ email });
@@ -15,8 +22,8 @@ const loginUser = async (request: Request, response: Response, next: NextFunctio
     const id = user.id;
     const userPassword = user.password;
     if (passHasher.validatePassword(password, userPassword)) {
-      const token = jwtTools.generateAccessToken(`${id}`);
-      return response.status(StatusCodes.ACCEPTED).json({ token });
+      const token = jwtTools.generateAccessToken(id);
+      return response.status(StatusCodes.OK).json({ token });
     }
     throw createCustomError(StatusCodes.BAD_REQUEST, 'Wrong password');
   } catch (err) {

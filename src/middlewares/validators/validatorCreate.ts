@@ -3,6 +3,16 @@ import { StatusCodes } from 'http-status-codes';
 import * as yup from 'yup';
 import createCustomError from '../../utils/createCustomError';
 
+type Value = {
+  [key: string]: yup.StringSchema | yup.DateSchema;
+};
+
+type Schema = {
+  body?: Value;
+  params?: Value;
+  query?: Value;
+};
+
 interface ValidationData {
   path: string;
   field: string;
@@ -10,11 +20,16 @@ interface ValidationData {
   message: string;
 }
 
-const validatorCreate = (schema) => async (
-  request: Request, response, next: NextFunction,
+const validatorCreate = (schema: Schema) => async (
+  request: Request, response: never, next: NextFunction,
 ) => {
   try {
-    await schema.validate({
+    const tempSchema = {};
+    Object.entries(schema).forEach(([key, val]) => {
+      (tempSchema[key] = yup.object(val));
+    });
+    const yupSchema = yup.object().shape(tempSchema);
+    await yupSchema.validate({
       body: request.body,
       query: request.query,
       params: request.params,
@@ -30,15 +45,8 @@ const validatorCreate = (schema) => async (
           message: elem.errors[0].split('.')[1],
         };
       });
-      // err.inner.forEach((element) => {
-      //   payload.push({
-      //     path: element.path.split('.')[0],
-      //     field: element.path.split('.')[1],
-      //     errorType: 'ValidationError',
-      //     message: element.errors[0].split('.')[1],
-      //   });
-      // });
       next(createCustomError(StatusCodes.BAD_REQUEST, 'Validation Error', payload));
+      return;
     }
     next(err);
   }

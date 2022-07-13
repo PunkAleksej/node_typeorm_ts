@@ -10,7 +10,12 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "dev": "nodemon",
-    "serve": "ts-node ./src/server.ts"
+    "serve": "ts-node ./src/server.ts",
+    "typeorm": "typeorm-ts-node-commonjs",
+    "typeorm-cli": "ts-node node_modules/typeorm/cli.js --dataSource src/db/dataSource.ts",
+    "db:sync": "ts-node node_modules/typeorm/cli.js migration:generate -p ./src/db/migrations/sync --dataSource ./src/db/dataSource.ts",
+    "db:migrate:up": "ts-node node_modules/typeorm/cli.js migration:run --dataSource ./src/db/dataSource.ts",
+    "db:migrate:down": "ts-node node_modules/typeorm/cli.js migration:revert --dataSource ./src/db/dataSource.ts"
   },
   "keywords": [],
   "author": "",

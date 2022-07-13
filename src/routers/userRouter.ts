@@ -14,6 +14,6 @@ userRouter.patch('/:id', jwtCheker, updateUser);
 
 userRouter.get('/:id', getUser);
 
-userRouter.get('/all/:id', jwtCheker, getAllUsers);
+userRouter.get('/all', jwtCheker, getAllUsers);
 
 export default userRouter;

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import passHasher from '../../utils/passHasher';
 import { usersRepository } from '../../db/dataSource';
+import createCustomError from '../../utils/createCustomError';
 
 export type UserInfo = {
   password?: string;
@@ -13,7 +14,14 @@ export type UserInfo = {
 const updateUser = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const userToUpdate = request.user;
-    const { firstName, lastName, password } = request.body;
+    const { firstName, lastName, password, email } = request.body;
+    if (email) {
+      const existUser = await usersRepository.findOneBy({ email });
+      if (existUser && userToUpdate.id !== existUser.id) {
+        throw createCustomError(StatusCodes.BAD_REQUEST, 'The email already exists');
+      }
+    }
+    userToUpdate.email = email;
     if (password) {
       userToUpdate.password = passHasher.passHasher(password);
     }

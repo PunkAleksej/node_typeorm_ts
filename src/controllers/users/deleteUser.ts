@@ -1,8 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { usersRepository } from '../../db/dataSource';
+import { User } from '../../db/User';
 
-const deleteUser = async (request: Request, response: Response, next: NextFunction) => {
+type deleteRequest = {
+  user?: User;
+}
+
+const deleteUser = async (request: deleteRequest, response: Response, next: NextFunction) => {
   try {
     const userToRemove = request.user;
     await usersRepository.remove(userToRemove);
