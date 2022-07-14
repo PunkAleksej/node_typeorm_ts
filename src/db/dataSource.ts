@@ -1,10 +1,9 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { User } from './User';
 import config from '../config';
 
-export const AppDataSource = new DataSource({
-  type: 'postgres',
+export const appDataSource = new DataSource({
+  type: config.db.type,
   host: config.db.host,
   port: config.db.port,
   username: config.db.userName,
@@ -12,13 +11,11 @@ export const AppDataSource = new DataSource({
   database: config.db.dataBase,
   synchronize: false,
   logging: false,
-  entities: [User],
+  entities: [`${__dirname}/entity/*`],
   migrations: [`${__dirname}/migrations/*`],
   subscribers: [],
 });
 
 export const connect = () => {
-  return AppDataSource.initialize();
+  return appDataSource.initialize();
 };
-
-export const usersRepository = AppDataSource.getRepository(User);

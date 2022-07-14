@@ -1,7 +1,7 @@
 import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { usersRepository } from '../../db/dataSource';
-import { User } from '../../db/User';
+import { usersRepository } from '../../db/index';
+import { User } from '../../db/entity/User';
 
 type deleteRequest = {
   user?: User;

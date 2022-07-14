@@ -9,17 +9,17 @@ import {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-    id: number;
+  id: number;
 
   @Column({
     type: 'varchar',
   })
-    firstName: string;
+  firstName: string;
 
   @Column({
     type: 'varchar',
   })
-    lastName: string;
+  lastName: string;
 
   @Column({
     length: 150,
@@ -30,11 +30,14 @@ export class User {
   @Column({
     type: 'varchar',
   })
-    password: string;
+  password: string;
+
+  @Column()
+  DoB: Date;
 
   @CreateDateColumn()
-    createAt: Date;
+  createAt: Date;
 
   @UpdateDateColumn()
-    updateAt: Date;
+  updateAt: Date;
 }

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import passHasher from '../../utils/passHasher';
-import { usersRepository } from '../../db/dataSource';
+import { usersRepository } from '../../db/index';
 import createCustomError from '../../utils/createCustomError';
 
 export type UserInfo = {

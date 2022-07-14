@@ -1,18 +1,19 @@
-import { NextFunction, Response } from 'express';
+import { RequestHandler } from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
-import { usersRepository } from '../../db/dataSource';
+import { usersRepository } from '../../db/index';
 import jwtTools from '../../utils/jwtTools';
 import passHasher from '../../utils/passHasher';
 import createCustomError from '../../utils/createCustomError';
 
-type signInRequest = {
-  body: {
-    email: string;
-    password: string;
-  }
+type RequestBody = {
+  email: string;
+  password: string;
 }
 
-const loginUser = async (request: signInRequest, response: Response, next: NextFunction) => {
+type ControllerType = RequestHandler<
+Record<string, never>, { token: string }, RequestBody, Record<string, never>>
+
+const authUser: ControllerType = async (request, response, next) => {
   try {
     const { email, password } = request.body;
     const user = await usersRepository.findOneBy({ email });
@@ -31,4 +32,4 @@ const loginUser = async (request: signInRequest, response: Response, next: NextF
   }
 };
 
-export default loginUser;
+export default authUser;

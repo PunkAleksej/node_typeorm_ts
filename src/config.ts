@@ -15,7 +15,7 @@ const parsedEnv = {
 
 const config = {
   db: {
-    type: parsedEnv.DB_TYPE,
+    type: parsedEnv.DB_TYPE as 'postgres',
     host: parsedEnv.DB_HOST,
     port: +parsedEnv.DB_PORT,
     userName: parsedEnv.DB_USERNAME,

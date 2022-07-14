@@ -7,7 +7,7 @@ export interface Payload {
   id: number;
 }
 
-const generateAccessToken = (id: number) => {
+const generateAccessToken = (id: number): string => {
   const payload = { id };
   return jwt.sign(payload, config.tokenSecretKey, { expiresIn: config.tokenExpiresTime });
 };

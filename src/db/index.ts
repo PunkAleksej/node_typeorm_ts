@@ -1,13 +1,15 @@
-import { AppDataSource } from './dataSource';
-import { User } from './User';
+import { appDataSource } from './dataSource';
+import { User } from './entity/User';
 
-const connection = AppDataSource.initialize().then(async () => {
+const connection = appDataSource.initialize().then(async () => {
   const user = new User();
   user.firstName = 'Alex';
   user.lastName = 'Dudnikov';
   user.password = 'userPassword1';
   user.email = 'alekdudnikov@mail.ru';
-  await AppDataSource.manager.save(user);
+  user.DoB = new Date();
 });
+
+export const usersRepository = appDataSource.getRepository(User);
 
 export default connection;

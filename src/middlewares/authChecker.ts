@@ -2,8 +2,8 @@ import { Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import createCustomError from '../utils/createCustomError';
 import jwtTools, { Payload } from '../utils/jwtTools';
-import { usersRepository } from '../db/dataSource';
-import { User } from '../db/User';
+import { usersRepository } from '../db/index';
+import { User } from '../db/entity/User';
 
 type tokenRequest = {
   user?: User;
@@ -21,7 +21,7 @@ const jwtCheker = async (request: tokenRequest, response: Response, next: NextFu
 
     const tokenPayload = jwtTools.validateAccessToken(token) as Payload;
 
-    const id = +tokenPayload.id;
+    const id = tokenPayload.id;
     const user = await usersRepository.findOneBy({ id });
     if (!user) {
       throw createCustomError(StatusCodes.FORBIDDEN, `There is no user with id ${id}`);
