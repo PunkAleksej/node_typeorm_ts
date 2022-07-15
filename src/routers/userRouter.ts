@@ -3,7 +3,7 @@ import Router from 'express';
 import deleteUser from '../controllers/users/deleteUser';
 import updateUser from '../controllers/users/update';
 import getUser from '../controllers/auth/getMe';
-import getAllUsers from '../controllers/users/getAllUsers';
+import getAllUsers from '../controllers/users/usersFilter';
 import jwtCheker from '../middlewares/authChecker';
 import changePass from '../controllers/users/changePass';
 import validatorCreate from '../middlewares/validators/validatorCreate';
@@ -17,7 +17,10 @@ userRouter.patch('/:id', jwtCheker, updateUser);
 
 userRouter.get('/:id', getUser);
 
-userRouter.post('/all', jwtCheker, getAllUsers);
+//userRouter.post('/all', jwtCheker, getAllUsers);
 
 userRouter.post('/change-pass', [jwtCheker, validatorCreate(changePassSchema)], changePass);
+
+userRouter.post('/filter', jwtCheker, getAllUsers);
+
 export default userRouter;
