@@ -13,6 +13,6 @@ authRouter.post('/sign-up', validatorCreate(signUpSchema), signUp);
 
 authRouter.post('/sign-in', validatorCreate(signInSchema), signIn);
 
-authRouter.post('/get-me', jwtCheker, getMe);
+authRouter.get('/me', jwtCheker, getMe);
 
 export default authRouter;

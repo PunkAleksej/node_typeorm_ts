@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import { LoggerOptions } from 'typeorm';
 
 const localConfig = dotenv.config({ path: path.normalize(`${__dirname}/../.env`) }).parsed;
 const defaultConfig = dotenv.config({ path: path.normalize(`${__dirname}/../default.env`) }).parsed;
@@ -21,6 +22,7 @@ const config = {
     userName: parsedEnv.DB_USERNAME,
     password: parsedEnv.DB_PASSWORD,
     dataBase: parsedEnv.DB_DATABASE,
+    logging: parsedEnv.DB_LOGGING as LoggerOptions,
   },
   port: +parsedEnv.CONNECTION_PORT,
   passwordSecretKey: parsedEnv.PASSWORD_SALT,

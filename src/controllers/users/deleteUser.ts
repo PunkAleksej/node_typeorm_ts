@@ -11,7 +11,7 @@ const deleteUser = async (request: deleteRequest, response: Response, next: Next
   try {
     const userToRemove = request.user;
     await usersRepository.remove(userToRemove);
-    response.status(StatusCodes.ACCEPTED).json({ message: userToRemove });
+    response.status(StatusCodes.ACCEPTED).json({ user: userToRemove });
   } catch (err) {
     next(err);
   }

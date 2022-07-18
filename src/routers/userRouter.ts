@@ -8,19 +8,23 @@ import jwtCheker from '../middlewares/authChecker';
 import changePass from '../controllers/users/changePass';
 import validatorCreate from '../middlewares/validators/validatorCreate';
 import changePassSchema from '../middlewares/validators/schemas/changePassSchema';
+import updateSchema from '../middlewares/validators/schemas/updateSchema';
+import filterSchema from '../middlewares/validators/schemas/filterSchema';
+import deleteSchema from '../middlewares/validators/schemas/deleteSchema';
+import getUserSchema from '../middlewares/validators/schemas/getUser';
 
 const userRouter = Router();
 
-userRouter.delete('/:id', jwtCheker, deleteUser);
+userRouter.use(jwtCheker);
 
-userRouter.patch('/:id', jwtCheker, updateUser);
+userRouter.delete('/:id', validatorCreate(deleteSchema), deleteUser);
 
-userRouter.get('/:id', getUser);
+userRouter.patch('/:id', validatorCreate(updateSchema), updateUser);
 
-//userRouter.post('/all', jwtCheker, getAllUsers);
+userRouter.get('/:id', validatorCreate(getUserSchema), getUser);
 
-userRouter.post('/change-pass', [jwtCheker, validatorCreate(changePassSchema)], changePass);
+userRouter.patch('/change-pass', validatorCreate(changePassSchema), changePass);
 
-userRouter.post('/filter', jwtCheker, getAllUsers);
+userRouter.get('/filter', validatorCreate(filterSchema), getAllUsers);
 
 export default userRouter;

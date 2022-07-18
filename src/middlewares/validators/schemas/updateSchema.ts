@@ -1,12 +1,12 @@
 import * as yup from 'yup';
 
-const signUpSchema = {
+const updateSchema = {
   body: {
-    password: yup.string().min(8).max(32).required(),
-    firstName: yup.string().min(4).max(255).required(),
-    lastName: yup.string().min(8).max(255).required(),
-    email: yup.string().email().required(),
+    password: yup.string().min(8).max(32),
+    firstName: yup.string().min(4).max(255),
+    lastName: yup.string().min(8).max(255),
+    email: yup.string().email(),
   },
 };
 
-export default signUpSchema;
+export default updateSchema;

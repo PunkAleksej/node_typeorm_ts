@@ -4,30 +4,35 @@ import { StatusCodes } from 'http-status-codes';
 import { usersRepository } from '../../db/index';
 import { User } from '../../db/entity/User';
 
-type RequestBody = {
-  firstName: string;
-  lastName:string;
-  email: string;
-  password: string;
-  DoB: string,
+type ReqParams = {
+  id?: string;
 }
 
-type Response = {
-  message: string;
-  token: string;
+type ReqQuery = {
+  column?: string;
+  order?: string;
+  perPage?: number;
+  page?: number;
+  minDoB?: string;
+  maxDoB?: string;
+  search?: string;
 }
 
+type ResBody = {
+  users: User[];
+  totalCount: number;
+}
 type ControllerType = RequestHandler<
-Record<string, never>, any, RequestBody, Record<string, never>>
+ReqParams, ResBody, object, ReqQuery>
 
-const getAllUser: ControllerType = async (req, res, next) => {
+const getAllUsers: ControllerType = async (req, res, next) => {
   try {
     const order = {
       [req.query.column]: req.query.order,
     };
     const take = req.query.perPage || null;
-    const offset = (req.query.page) ? (+req.query.page - 1) * take : null;
-    const skip = offset || 0;
+    const page = +req.query.page || 1;
+    const skip = take ? (page - 1) * take : null;
     const DoB = Between(
       new Date(req.query.minDoB || 0),
       new Date(req.query.maxDoB),
@@ -36,10 +41,11 @@ const getAllUser: ControllerType = async (req, res, next) => {
     let where: FindManyOptions<User>['where'];
 
     if (req.query.search) {
+      const search = ILike(`%${req.query.search}%`);
       where = [
-        { firstName: ILike(`%${req.query.search}%`), DoB },
-        { lastName: ILike(`%${req.query.search}%`), DoB },
-        { email: ILike(`%${req.query.search}%`), DoB },
+        { firstName: search, DoB },
+        { lastName: search, DoB },
+        { email: search, DoB },
       ];
     } else {
       where = {
@@ -47,10 +53,6 @@ const getAllUser: ControllerType = async (req, res, next) => {
       };
     }
 
-    console.log(where)
-    console.log(order)
-    //console.log(take)
-    //console.log(skip)
     const [users, totalCount] = await usersRepository.findAndCount({
       where,
       order,
@@ -64,4 +66,4 @@ const getAllUser: ControllerType = async (req, res, next) => {
   }
 };
 
-export default getAllUser;
+export default getAllUsers;

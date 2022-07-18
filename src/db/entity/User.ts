@@ -13,31 +13,43 @@ export class User {
 
   @Column({
     type: 'varchar',
+    nullable: false,
   })
   firstName: string;
 
   @Column({
     type: 'varchar',
+    nullable: false,
   })
   lastName: string;
 
   @Column({
     length: 150,
     unique: true,
+    nullable: false,
   })
   email: string;
 
   @Column({
     type: 'varchar',
+    nullable: false,
+    select: false,
   })
   password: string;
 
-  @Column()
+  @Column({
+    type: 'time without time zone',
+    nullable: false,
+  })
   DoB: Date;
 
-  @CreateDateColumn()
+  @CreateDateColumn({
+    type: 'time with time zone',
+  })
   createAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    type: 'time with time zone',
+  })
   updateAt: Date;
 }

@@ -5,7 +5,7 @@ import { usersRepository } from '../../db/index';
 import { appDataSource } from '../../db/dataSource';
 import passHasher from '../../utils/passHasher';
 import createCustomError from '../../utils/createCustomError';
-import jwtTools from '../../utils/jwtTools';
+import jwtTools from '../../utils/authTools';
 
 type RequestBody = {
   firstName: string;
@@ -16,7 +16,7 @@ type RequestBody = {
 }
 
 type Response = {
-  message: string;
+  user: User;
   token: string;
 }
 
@@ -37,11 +37,11 @@ const signUp: ControllerType = async (request, response, next) => {
     newUser.email = email;
     newUser.DoB = new Date(DoB);
     await appDataSource.manager.save(newUser);
-    const newUserId = +(await usersRepository.findOneBy({ email })).id;
-    const newToken = jwtTools.generateAccessToken(newUserId);
+    const createdUser = await usersRepository.findOneBy({ email });
+    const newToken = jwtTools.generateAccessToken(createdUser.id);
     return response
-      .status(StatusCodes.ACCEPTED)
-      .json({ message: 'registration complete', token: newToken });
+      .status(StatusCodes.CREATED)
+      .json({ user: createdUser, token: newToken });
   } catch (err) {
     next(err);
   }

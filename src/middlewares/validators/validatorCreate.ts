@@ -38,9 +38,10 @@ const validatorCreate = (schema: Schema) => async (
   } catch (err) {
     if (err instanceof yup.ValidationError) {
       const payload: ValidationData[] = err.inner.map((elem) => {
+        const elemPath = elem.path.split('.');
         return {
-          path: elem.path.split('.')[0],
-          field: elem.path.split('.')[1],
+          path: elemPath[0],
+          field: elemPath[1],
           errorType: 'ValidationError',
           message: elem.errors[0].split('.')[1],
         };
