@@ -28,7 +28,7 @@ const validatorCreate = (schema: Schema) => async (
     Object.entries(schema).forEach(([key, val]) => {
       (tempSchema[key] = yup.object(val));
     });
-    const yupSchema = yup.object().shape(tempSchema);
+    const yupSchema = yup.object().shape(tempSchema).noUnknown(false);
     await yupSchema.validate({
       body: request.body,
       query: request.query,

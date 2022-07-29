@@ -16,16 +16,14 @@ Record<string, never>, { token: string }, RequestBody, Record<string, never>>
 const authUser: ControllerType = async (request, response, next) => {
   try {
     const { email, password } = request.body;
-
     const user = await usersRepository
-      .createQueryBuilder()
-      .select('User.email', `${email}`)
-      .addSelect('User.password')
+      .createQueryBuilder('user')
+      .where('user.email=:email', { email })
+      .addSelect('user.password')
       .getOne();
     if (!user) {
       throw createCustomError(StatusCodes.NOT_FOUND, 'User not found');
     }
-
     const userPassword = user.password;
     if (!passHasher.validatePassword(password, userPassword)) {
       throw createCustomError(StatusCodes.BAD_REQUEST, 'Wrong password');
