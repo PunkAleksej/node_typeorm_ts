@@ -4,6 +4,7 @@ import { usersRepository } from '../../db/index';
 import jwtTools from '../../utils/authTools';
 import passHasher from '../../utils/passHasher';
 import createCustomError from '../../utils/createCustomError';
+import { User } from '../../db/entity/User';
 
 type RequestBody = {
   email: string;
@@ -11,7 +12,7 @@ type RequestBody = {
 }
 
 type ControllerType = RequestHandler<
-Record<string, never>, { token: string }, RequestBody, Record<string, never>>
+Record<string, never>, { token: string, user: User }, RequestBody, Record<string, never>>
 
 const authUser: ControllerType = async (request, response, next) => {
   try {
@@ -30,7 +31,8 @@ const authUser: ControllerType = async (request, response, next) => {
     }
     const id = user.id;
     const token = jwtTools.generateAccessToken(id);
-    return response.status(StatusCodes.OK).json({ token });
+    const responseUser = await usersRepository.findOneBy({ email });
+    return response.status(StatusCodes.OK).json({ token, user: responseUser });
   } catch (err) {
     next(err);
   }
