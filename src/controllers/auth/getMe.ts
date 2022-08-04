@@ -11,7 +11,7 @@ type RequestUser = {
 }
 
 type Response = {
-  message: User;
+  user: User;
 }
 
 type ControllerType = RequestHandler<
@@ -20,7 +20,7 @@ Record<string, never>, Response, RequestUser, Record<string, never>>
 const getMe: ControllerType = async (request, response, next) => {
   try {
     const user = request.user;
-    response.status(StatusCodes.ACCEPTED).json({ message: user });
+    response.status(StatusCodes.ACCEPTED).json({ user });
   } catch (err) {
     next(err);
   }

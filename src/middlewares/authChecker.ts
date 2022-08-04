@@ -14,7 +14,7 @@ type tokenRequest = {
 
 const jwtCheker = async (request: tokenRequest, response: Response, next: NextFunction) => {
   try {
-    const token = request.headers.authorization;
+    const token = request.headers.authorization.split(' ')[1];
     if (!token) {
       throw createCustomError(StatusCodes.UNAUTHORIZED, 'Token is missing');
     }

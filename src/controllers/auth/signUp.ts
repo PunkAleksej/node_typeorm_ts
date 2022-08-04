@@ -35,7 +35,9 @@ const signUp: ControllerType = async (request, response, next) => {
     newUser.lastName = lastName;
     newUser.password = passHasher.passHasher(password);
     newUser.email = email;
-    newUser.DoB = new Date(DoB);
+    if (DoB) {
+      newUser.DoB = new Date(DoB);
+    }
     await appDataSource.manager.save(newUser);
     const createdUser = await usersRepository.findOneBy({ email });
     const newToken = jwtTools.generateAccessToken(createdUser.id);

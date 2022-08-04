@@ -13,19 +13,25 @@ export class User {
 
   @Column({
     type: 'varchar',
-    nullable: false,
+    nullable: true,
   })
   firstName: string;
 
   @Column({
     type: 'varchar',
-    nullable: false,
+    nullable: true,
   })
   lastName: string;
 
   @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  photo: string;
+
+  @Column({
     length: 150,
-    unique: true,
+    unique: false,
     nullable: false,
   })
   email: string;
@@ -39,17 +45,20 @@ export class User {
 
   @Column({
     type: 'time without time zone',
-    nullable: false,
+    nullable: true,
+    select: false,
   })
   DoB: Date;
 
   @CreateDateColumn({
     type: 'time with time zone',
+    select: false,
   })
   createAt: Date;
 
   @UpdateDateColumn({
     type: 'time with time zone',
+    select: false,
   })
   updateAt: Date;
 }
