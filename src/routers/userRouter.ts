@@ -23,7 +23,7 @@ userRouter.patch('/:id', validatorCreate(updateSchema), updateUser);
 
 userRouter.get('/:id', validatorCreate(getUserSchema), getUser);
 
-userRouter.patch('/change-pass', validatorCreate(changePassSchema), changePass);
+userRouter.post('/change-pass', validatorCreate(changePassSchema), changePass);
 
 userRouter.get('/filter', validatorCreate(filterSchema), getAllUsers);
 

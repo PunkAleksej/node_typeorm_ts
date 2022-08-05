@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import passHasher from '../../utils/passHasher';
 import { usersRepository } from '../../db/index';
 import createCustomError from '../../utils/createCustomError';
+import jwtTools from '../../utils/authTools';
 
 export type UserInfo = {
   password?: string;
@@ -32,8 +33,9 @@ const updateUser = async (request: Request, response: Response, next: NextFuncti
     if (lastName) {
       userToUpdate.lastName = lastName;
     }
+    const token = jwtTools.generateAccessToken(request.user.id);
     await usersRepository.save(userToUpdate);
-    response.status(StatusCodes.ACCEPTED).json({ userToUpdate });
+    response.status(StatusCodes.ACCEPTED).json({ token, user: userToUpdate });
   } catch (err) {
     next(err);
   }

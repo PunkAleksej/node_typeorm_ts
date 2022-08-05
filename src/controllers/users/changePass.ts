@@ -18,12 +18,16 @@ Record<string, never>, Response, RequestBody, Record<string, never>>
 
 const changePass: ControllerType = async (request, response, next) => {
   try {
-    const email = request.user.email;
     const user = await usersRepository
-      .createQueryBuilder()
-      .select('User.email', `${email}`)
-      .addSelect('User.password')
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.id = :id', { id: request.user.id })
       .getOne();
+    // const user = await usersRepository
+    //   .createQueryBuilder()
+    //   .select('User.email', `${email}`)
+    //   .addSelect('User.password')
+    //   .getOne();
     const userPassword = user.password;
     const newPassword = request.body.newPassword;
     const oldPassword = request.body.oldPassword;
