@@ -12,18 +12,21 @@ import updateSchema from '../middlewares/validators/schemas/updateSchema';
 import filterSchema from '../middlewares/validators/schemas/filterSchema';
 import deleteSchema from '../middlewares/validators/schemas/deleteSchema';
 import getUserSchema from '../middlewares/validators/schemas/getUser';
+import updatePhoto from '../controllers/users/updatePhoto';
 
 const userRouter = Router();
 
 userRouter.use(jwtCheker);
 
-userRouter.delete('/:id', validatorCreate(deleteSchema), deleteUser);
+userRouter.post('/change-pass', validatorCreate(changePassSchema), changePass);
+
+userRouter.patch('/update-photo', validatorCreate(updateSchema), updatePhoto);
 
 userRouter.patch('/:id', validatorCreate(updateSchema), updateUser);
 
-userRouter.get('/:id', validatorCreate(getUserSchema), getUser);
+userRouter.delete('/:id', validatorCreate(deleteSchema), deleteUser);
 
-userRouter.post('/change-pass', validatorCreate(changePassSchema), changePass);
+userRouter.get('/:id', validatorCreate(getUserSchema), getUser);
 
 userRouter.get('/filter', validatorCreate(filterSchema), getAllUsers);
 

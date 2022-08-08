@@ -6,6 +6,7 @@ const updateSchema = {
     firstName: yup.string().min(4).max(255),
     lastName: yup.string().min(8).max(255),
     email: yup.string().email(),
+    photo: yup.string(),
   },
 };
 
