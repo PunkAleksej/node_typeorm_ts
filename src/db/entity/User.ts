@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  AfterLoad,
 } from 'typeorm';
 
 @Entity()
@@ -61,4 +62,11 @@ export class User {
     select: false,
   })
   updateAt: Date;
+
+  @AfterLoad()
+  addDataForPhoto() {
+    if (this.photo !== null) {
+      this.photo = `http://localhost:4000/static/${this.photo}`;
+    }
+  }
 }

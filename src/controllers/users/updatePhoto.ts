@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import fs from 'fs';
-import { Buffer } from 'buffer';
 import { StatusCodes } from 'http-status-codes';
-import { SimpleConsoleLogger } from 'typeorm';
 import { usersRepository } from '../../db/index';
 import jwtTools from '../../utils/authTools';
+import createCustomError from '../../utils/createCustomError';
 
 export type UserInfo = {
   photo?: string;
@@ -12,19 +11,21 @@ export type UserInfo = {
 
 const updatePhoto = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    console.log(1)
     const userToUpdate = request.user;
     const { photo } = request.body;
-    console.log(photo);
-    if (photo) {
-      userToUpdate.photo = photo;
+
+    const imgName = `public/${request.user.id}.png`;
+    const imgNameInDB = `${request.user.id}.png`;
+    if (imgName) {
+      userToUpdate.photo = imgNameInDB;
     }
-    const buff = Buffer.from(photo, 'base64');
-    fs.writeFileSync('stack-abuse-logo-out.png', buff);
-    console.log('Base64 image data converted to file: stack-abuse-logo-out.png');
-    // const token = jwtTools.generateAccessToken(request.user.id);
-    // await usersRepository.save(userToUpdate);
-    // response.status(StatusCodes.ACCEPTED).json({ token, user: userToUpdate });
+    const base64Image = photo.split(';base64,').pop();
+    fs.writeFile(imgName, base64Image, { encoding: 'base64' }, (err) => {
+      createCustomError(StatusCodes.BAD_REQUEST, `${err}`);
+    });
+    const token = jwtTools.generateAccessToken(request.user.id);
+    await usersRepository.save(userToUpdate);
+    response.status(StatusCodes.ACCEPTED).json({ token, user: userToUpdate });
   } catch (err) {
     next(err);
   }
