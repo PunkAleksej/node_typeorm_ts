@@ -14,8 +14,10 @@ const updatePhoto = async (request: Request, response: Response, next: NextFunct
     const userToUpdate = request.user;
     const { photo } = request.body;
 
-    const imgName = `public/${request.user.id}.png`;
-    const imgNameInDB = `${request.user.id}.png`;
+    // const imgName = `src/public/${request.user.id}.png`;
+    // const imgNameInDB = `${request.user.id}.png`;
+    const imgName = `src/public/${jwtTools.generateAccessToken(request.user.id)}.png`;
+    const imgNameInDB = `${jwtTools.generateAccessToken(request.user.id)}.png`;
     if (imgName) {
       userToUpdate.photo = imgNameInDB;
     }
@@ -25,6 +27,7 @@ const updatePhoto = async (request: Request, response: Response, next: NextFunct
     });
     const token = jwtTools.generateAccessToken(request.user.id);
     await usersRepository.save(userToUpdate);
+    userToUpdate.photo = `http://localhost:4000/static/${imgNameInDB}`;
     response.status(StatusCodes.ACCEPTED).json({ token, user: userToUpdate });
   } catch (err) {
     next(err);

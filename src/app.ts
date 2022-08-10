@@ -11,7 +11,7 @@ app.use(cors({
   origin: 'http://localhost:3000',
 }));
 
-app.use('/static', express.static('/home/fusion_tech/node/typeNode/public/'));
+app.use('/static', express.static(`${__dirname}/public/`));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({
   limit: '20mb',
