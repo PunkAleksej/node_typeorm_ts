@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import userRouter from './routers/userRouter';
 import authRouter from './routers/authRouter';
+import catalogRouter from './routers/catalogRouter';
 import errorHandler from './middlewares/errorHandler';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import type from './type';
@@ -19,6 +20,7 @@ app.use(express.json({
 
 app.use('/user', userRouter);
 app.use('/auth', authRouter);
+app.use('/catalog', catalogRouter);
 app.use(errorHandler);
 
 export default app;
