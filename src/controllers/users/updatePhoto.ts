@@ -13,10 +13,7 @@ const updatePhoto = async (request: Request, response: Response, next: NextFunct
   try {
     const userToUpdate = request.user;
     const { photo } = request.body;
-
-    // const imgName = `src/public/${request.user.id}.png`;
-    // const imgNameInDB = `${request.user.id}.png`;
-    const imgName = `src/public/${jwtTools.generateAccessToken(request.user.id)}.png`;
+    const imgName = `public/${jwtTools.generateAccessToken(request.user.id)}.png`;
     const imgNameInDB = `${jwtTools.generateAccessToken(request.user.id)}.png`;
     if (imgName) {
       userToUpdate.photo = imgNameInDB;
