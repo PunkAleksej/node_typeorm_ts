@@ -5,10 +5,16 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   AfterLoad,
+  ManyToMany,
+  ManyToOne,
+  JoinTable,
 } from 'typeorm';
+import { Genre } from './Genre';
+import { Rating } from './Rating';
+import { Author } from './Author';
 
 @Entity()
-export class User {
+export class Book {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -17,6 +23,10 @@ export class User {
     nullable: true,
   })
   name: string;
+
+  @ManyToOne(() => Author, (Author) => Author.id, {
+    cascade: true,
+  })
 
   @Column({
     type: 'varchar',
@@ -28,13 +38,11 @@ export class User {
     type: 'varchar',
     nullable: true,
   })
-  photo: string;
+  description: string;
 
-  @Column({
-    type: 'varchar',
-    nullable: true,
+  @ManyToMany(() => Rating, (Rating) => Rating.id, {
+    cascade: true,
   })
-  text: string;
 
   @Column({
     type: 'varchar',
@@ -43,17 +51,36 @@ export class User {
   rating: string;
 
   @Column({
-    type: 'varchar',
     nullable: true,
+    type: 'int',
   })
-  price: string;
+  price: number;
 
   @Column({
-    type: 'time without time zone',
     nullable: true,
-    select: false,
+    type: 'int',
   })
-  DoB: Date;
+  paperPrice: number;
+
+  @Column({
+    nullable: true,
+    type: 'varchar',
+  })
+  cover: string;
+
+  @ManyToMany(() => Genre, (Genre) => Genre.id, {
+    cascade: true,
+  })
+  @JoinTable()
+  genres: Genre[];
+
+  @AfterLoad()
+  addDataForCover() {
+    if (this.cover === '') {
+      return;
+    }
+    this.cover = `http://localhost:4000/static/${this.cover}`;
+  }
 
   @CreateDateColumn({
     type: 'time with time zone',
@@ -66,11 +93,4 @@ export class User {
     select: false,
   })
   updateAt: Date;
-
-  @AfterLoad()
-  addDataForPhoto() {
-    if (this.photo !== null) {
-      this.photo = `http://localhost:4000/static/${this.photo}`;
-    }
-  }
 }
