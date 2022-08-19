@@ -5,8 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   AfterLoad,
-  ManyToMany,
+  OneToMany,
   ManyToOne,
+  ManyToMany,
   JoinTable,
 } from 'typeorm';
 import { Genre } from './Genre';
@@ -40,8 +41,8 @@ export class Book {
   })
   description: string;
 
-  @ManyToMany(() => Rating, (Rating) => Rating.id, {
-    cascade: true,
+  @OneToMany(() => Rating, (Rating) => Rating.id, {
+
   })
 
   @Column({
@@ -93,4 +94,9 @@ export class Book {
     select: false,
   })
   updateAt: Date;
+
+  @OneToMany(() => Rating, (Rating) => Rating.bookRating, {
+    nullable: false,
+  })
+  bookRating: [Rating['bookRating']];
 }

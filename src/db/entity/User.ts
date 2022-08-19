@@ -5,7 +5,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   AfterLoad,
+  OneToMany,
 } from 'typeorm';
+import { Rating } from './Rating';
 
 @Entity()
 export class User {
@@ -43,6 +45,9 @@ export class User {
     select: false,
   })
   password: string;
+
+  @OneToMany(() => Rating, (User) => User.id)
+  UserId: User['id'];
 
   @Column({
     type: 'time without time zone',

@@ -2,29 +2,43 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
+  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Book } from './Book';
+import { User } from './User';
 
 @Entity()
 export class Rating {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    nullable: false,
-    type: 'varchar',
+  @CreateDateColumn({
+    type: 'time with time zone',
+    select: false,
   })
-  name: string;
-
-  @CreateDateColumn()
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({
+    type: 'time with time zone',
+    select: false,
+  })
   updatedAt: Date;
 
-  @ManyToMany(() => Book, (book) => book.genres)
-  books: Rating[];
+  @Column({
+    nullable: false,
+    type: 'int',
+  })
+  bookRating: number;
+
+  @ManyToOne(() => Book, (Book) => Book.id, {
+    nullable: false,
+  })
+  BookId: Book['id'];
+
+  @ManyToOne(() => User, (User) => User.id, {
+    nullable: false,
+  })
+  UserId: User['id'];
 }
