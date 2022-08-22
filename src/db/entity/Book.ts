@@ -4,6 +4,8 @@ import {
   Column,
   CreateDateColumn,
   AfterLoad,
+  JoinTable,
+  ManyToOne,
   OneToMany,
   ManyToMany,
 } from 'typeorm';
@@ -58,12 +60,13 @@ export class Book {
   })
   rating: Rating[];
 
-  @OneToMany(() => Author, (Author) => Author.id, {
+  @ManyToOne(() => Author, (Author) => Author.books, {
   })
-  author: Author['name'];
+  author: Author[];
 
-  @ManyToMany(() => Genre, (Genre) => Genre.id, {
+  @ManyToMany(() => Genre, (Genre) => Genre.books, {
   })
+  @JoinTable()
   genres: Genre[];
 
   // @AfterLoad()

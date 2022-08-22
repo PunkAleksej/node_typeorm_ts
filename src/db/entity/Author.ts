@@ -2,7 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { Book } from './Book';
 
@@ -17,6 +17,6 @@ export class Author {
   })
   name: string;
 
-  @ManyToOne(() => Book, (book) => book.author)
-  book: Book[];
+  @OneToMany(() => Book, (book) => book.author)
+  books: Book[];
 }
