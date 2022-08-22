@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   AfterLoad,
   JoinTable,
+  OneToOne,
   ManyToOne,
   OneToMany,
   ManyToMany,
@@ -46,7 +47,7 @@ export class Book {
   })
   releasedAt: Date;
 
-  // @OneToMany(() => Photo, (Photo) => Photo.book, {
+  // @OneToOne(() => Photo, (Photo) => Photo.book, {
   //   nullable: false,
   // })
   // cover: Photo;
@@ -57,14 +58,19 @@ export class Book {
   cover: string;
 
   @OneToMany(() => Rating, (Rating) => Rating.id, {
+    cascade: true
   })
+  @JoinTable()
   rating: Rating[];
 
   @ManyToOne(() => Author, (Author) => Author.books, {
+    cascade: true
   })
-  author: Author[];
+  @JoinTable()
+  author: Author;
 
   @ManyToMany(() => Genre, (Genre) => Genre.books, {
+    cascade: true
   })
   @JoinTable()
   genres: Genre[];

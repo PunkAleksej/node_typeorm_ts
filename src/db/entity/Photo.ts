@@ -1,7 +1,7 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  ManyToOne,
+  OneToOne,
 } from 'typeorm';
 import { Book } from './Book';
 import { User } from './User';
@@ -11,12 +11,12 @@ export class Photo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Book, (Book) => Book.id, {
+  @OneToOne(() => Book, (Book) => Book.id, {
     nullable: true,
   })
   book: Book;
 
-  @ManyToOne(() => User, (User) => User.id, {
+  @OneToOne(() => User, (User) => User.id, {
     nullable: true,
   })
   user: User;

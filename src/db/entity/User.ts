@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   AfterLoad,
+  OneToOne,
   OneToMany,
 } from 'typeorm';
 import { Rating } from './Rating';
@@ -66,10 +67,10 @@ export class User {
   })
   updateAt: Date;
 
-  @OneToMany(() => Photo, (Photo) => Photo.user, {
+  @OneToOne(() => Photo, (Photo) => Photo.user, {
     nullable: false,
   })
-  userPhoto: Photo[];
+  userPhoto: Photo;
 
   @OneToMany(() => Rating, (User) => User.id)
   rating: Rating[];

@@ -12,7 +12,7 @@ export class Genre {
   id: number;
 
   @Column({
-    nullable: false,
+    nullable: true,
     type: 'varchar',
   })
   name: string;
