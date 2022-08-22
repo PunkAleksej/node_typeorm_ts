@@ -3,16 +3,14 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
   AfterLoad,
   OneToMany,
-  ManyToOne,
   ManyToMany,
-  JoinTable,
 } from 'typeorm';
 import { Genre } from './Genre';
 import { Rating } from './Rating';
 import { Author } from './Author';
+import { Photo } from './Photo';
 
 @Entity()
 export class Book {
@@ -25,78 +23,54 @@ export class Book {
   })
   name: string;
 
-  @ManyToOne(() => Author, (Author) => Author.id, {
-    cascade: true,
-  })
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  author: string;
-
   @Column({
     type: 'varchar',
     nullable: true,
   })
   description: string;
 
-  @OneToMany(() => Rating, (Rating) => Rating.id, {
-
-  })
-
-  @Column({
-    type: 'varchar',
-    nullable: true,
-  })
-  rating: string;
-
   @Column({
     nullable: true,
-    type: 'int',
   })
   price: number;
 
   @Column({
     nullable: true,
-    type: 'int',
   })
   paperPrice: number;
 
+  @CreateDateColumn({
+    select: false,
+  })
+  releasedAt: Date;
+
+  // @OneToMany(() => Photo, (Photo) => Photo.book, {
+  //   nullable: false,
+  // })
+  // cover: Photo;
+
   @Column({
     nullable: true,
-    type: 'varchar',
   })
   cover: string;
 
-  @ManyToMany(() => Genre, (Genre) => Genre.id, {
-    cascade: true,
+  @OneToMany(() => Rating, (Rating) => Rating.id, {
   })
-  @JoinTable()
+  rating: Rating[];
+
+  @OneToMany(() => Author, (Author) => Author.id, {
+  })
+  author: Author['name'];
+
+  @ManyToMany(() => Genre, (Genre) => Genre.id, {
+  })
   genres: Genre[];
 
-  @AfterLoad()
-  addDataForCover() {
-    if (this.cover === '') {
-      return;
-    }
-    this.cover = `http://localhost:4000/static/${this.cover}`;
-  }
-
-  @CreateDateColumn({
-    type: 'time with time zone',
-    select: false,
-  })
-  createAt: Date;
-
-  @UpdateDateColumn({
-    type: 'time with time zone',
-    select: false,
-  })
-  updateAt: Date;
-
-  @OneToMany(() => Rating, (Rating) => Rating.bookRating, {
-    nullable: false,
-  })
-  bookRating: [Rating['bookRating']];
+  // @AfterLoad()
+  // addDataForCover() {
+  //   if (this.cover === '') {
+  //     return;
+  //   }
+  //   this.cover = `http://localhost:4000/static/${this.cover}`;
+  // }
 }

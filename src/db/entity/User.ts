@@ -8,6 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Rating } from './Rating';
+import { Photo } from './Photo';
 
 @Entity()
 export class User {
@@ -46,9 +47,6 @@ export class User {
   })
   password: string;
 
-  @OneToMany(() => Rating, (User) => User.id)
-  UserId: User['id'];
-
   @Column({
     type: 'time without time zone',
     nullable: true,
@@ -67,6 +65,14 @@ export class User {
     select: false,
   })
   updateAt: Date;
+
+  @OneToMany(() => Photo, (Photo) => Photo.user, {
+    nullable: false,
+  })
+  userPhoto: Photo[];
+
+  @OneToMany(() => Rating, (User) => User.id)
+  rating: Rating[];
 
   @AfterLoad()
   addDataForPhoto() {

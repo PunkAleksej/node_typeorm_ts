@@ -3,8 +3,6 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
 } from 'typeorm';
 import { Book } from './Book';
 
@@ -18,12 +16,6 @@ export class Genre {
     type: 'varchar',
   })
   name: string;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
 
   @ManyToMany(() => Book, (book) => book.genres)
   books: Genre[];

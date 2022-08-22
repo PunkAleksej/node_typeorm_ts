@@ -2,9 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToMany,
-  CreateDateColumn,
-  UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Book } from './Book';
 
@@ -19,12 +17,6 @@ export class Author {
   })
   name: string;
 
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @ManyToMany(() => Book, (book) => book.author)
-  books: Author[];
+  @ManyToOne(() => Book, (book) => book.author)
+  book: Book[];
 }

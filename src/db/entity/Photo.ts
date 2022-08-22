@@ -1,30 +1,23 @@
 import {
   Entity,
   PrimaryGeneratedColumn,
-  Column,
   ManyToOne,
 } from 'typeorm';
 import { Book } from './Book';
 import { User } from './User';
 
 @Entity()
-export class Rating {
+export class Photo {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    nullable: false,
-    type: 'int',
-  })
-  bookRating: number;
-
   @ManyToOne(() => Book, (Book) => Book.id, {
-    nullable: false,
+    nullable: true,
   })
-  Book: Book;
+  book: Book;
 
   @ManyToOne(() => User, (User) => User.id, {
-    nullable: false,
+    nullable: true,
   })
-  User: User;
+  user: User;
 }
