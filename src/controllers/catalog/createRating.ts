@@ -4,9 +4,9 @@ import { booksRepository, ratingRepository, usersRepository } from '../../db/ind
 import { Rating } from '../../db/entity/Rating';
 
 type RequestBody = {
-  bookId: number;
-  userId: number;
-  bookRating: number;
+  bookId: string;
+  userId: string;
+  bookRating: string;
 }
 
 type Response = {
@@ -18,16 +18,33 @@ Record<string, never>, Response, RequestBody, Record<string, never>>
 
 const createRating: ControllerType = async (request, response, next) => {
   try {
-    const { bookId, userId, bookRating } = request.body;
+    const bookId = +request.body.bookId;
+    const userId = +request.user.id;
+    const bookRating = +request.body.bookRating;
+    const ratingOverwriting = await ratingRepository.findOne({
+      relations: {
+        Book: true,
+        User: true,
+      },
+      where: {
+        Book: {
+          id: bookId,
+        },
+        User: {
+          id: userId,
+        },
+      },
+    });
     const newRating = new Rating();
-    newRating.Book = await booksRepository.findOneBy({ id: bookId });
-    newRating.User = await usersRepository.findOneBy({ id: userId });
-    newRating.bookRating = bookRating;
-    await ratingRepository.create(newRating);
-    await ratingRepository.save(newRating);
+    const ratingToUpdate = ratingOverwriting || newRating;
+    ratingToUpdate.Book = await booksRepository.findOneBy({ id: bookId });
+    ratingToUpdate.User = await usersRepository.findOneBy({ id: userId });
+    ratingToUpdate.bookRating = bookRating;
+    ratingRepository.create(ratingToUpdate);
+    await ratingRepository.save(ratingToUpdate);
     return response
       .status(StatusCodes.CREATED)
-      .json({ rating: newRating });
+      .json({ rating: ratingToUpdate });
   } catch (err) {
     next(err);
   }

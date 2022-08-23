@@ -5,15 +5,14 @@ import {
   CreateDateColumn,
   AfterLoad,
   JoinTable,
-  OneToOne,
   ManyToOne,
   OneToMany,
   ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Genre } from './Genre';
 import { Rating } from './Rating';
 import { Author } from './Author';
-import { Photo } from './Photo';
 
 @Entity()
 export class Book {
@@ -47,24 +46,21 @@ export class Book {
   })
   releasedAt: Date;
 
-  @OneToOne(() => Photo)
-  cover: Photo;
+  @Column({
+    nullable: true,
+  })
+  cover: string;
 
-  // @Column({
-  //   nullable: true,
-  // })
-  // cover: string;
-
-  @OneToMany(() => Rating, (Rating) => Rating.id, {
+  @OneToMany(() => Rating, (Rating) => Rating.Book, {
     cascade: true,
   })
-  @JoinTable()
+  @JoinColumn()
   rating: Rating[];
 
   @ManyToOne(() => Author, (Author) => Author.books, {
     cascade: true,
   })
-  @JoinTable()
+  @JoinColumn()
   author: Author;
 
   @ManyToMany(() => Genre, (Genre) => Genre.books, {

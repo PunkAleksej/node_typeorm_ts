@@ -1,7 +1,6 @@
-import { genreRepository, booksRepository, authorRepository, photoRepository } from '../index';
+import { genreRepository, booksRepository, authorRepository } from '../index';
 import { connect } from '../dataSource';
 import { Book } from '../entity/Book';
-import { Photo } from '../entity/Photo';
 
 (async () => {
   await connect();
@@ -293,6 +292,7 @@ import { Photo } from '../entity/Photo';
       createdBook.name = book.name;
       createdBook.author = authors.find((author) => author.name === book.author);
       createdBook.description = book.description;
+      createdBook.cover = book.cover;
       createdBook.paperPrice = book.paperPrice;
       createdBook.releasedAt = book.releasedAt;
       createdBook.price = book.price;

@@ -6,6 +6,8 @@ import createBook from '../controllers/catalog/createBook';
 import createBookSchema from '../middlewares/validators/schemas/createBookSchema';
 import createRating from '../controllers/catalog/createRating';
 import ratingSchema from '../middlewares/validators/schemas/ratingSchema';
+import jwtCheker from '../middlewares/authChecker';
+import getBook from '../controllers/catalog/getBook';
 
 const catalogRouter = Router();
 
@@ -13,6 +15,7 @@ catalogRouter.post('/filter', validatorCreate(signUpSchema), booksFilter);
 
 catalogRouter.post('/create', validatorCreate(createBookSchema), createBook);
 
-catalogRouter.post('/rating', createRating);
+catalogRouter.post('/rating', validatorCreate(ratingSchema), jwtCheker, createRating);
 
+catalogRouter.post('/get', getBook);
 export default catalogRouter;

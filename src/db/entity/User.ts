@@ -6,11 +6,9 @@ import {
   UpdateDateColumn,
   AfterLoad,
   JoinTable,
-  OneToOne,
   OneToMany,
 } from 'typeorm';
 import { Rating } from './Rating';
-import { Photo } from './Photo';
 
 @Entity()
 export class User {
@@ -68,12 +66,7 @@ export class User {
   })
   updateAt: Date;
 
-  @OneToOne(() => Photo, (Photo) => Photo.user, {
-    nullable: false,
-  })
-  userPhoto: Photo;
-
-  @OneToMany(() => Rating, (User) => User.id, {
+  @OneToMany(() => Rating, (Rating) => Rating.User, {
     cascade: true,
   })
   @JoinTable()

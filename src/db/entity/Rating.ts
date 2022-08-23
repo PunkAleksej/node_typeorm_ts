@@ -2,7 +2,10 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
+  JoinTable,
   ManyToOne,
+  ManyToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Book } from './Book';
 import { User } from './User';
@@ -18,13 +21,14 @@ export class Rating {
   })
   bookRating: number;
 
-  @ManyToOne(() => Book, (Book) => Book.id, {
+  @ManyToOne(() => Book, (Book) => Book.rating, {
     nullable: false,
   })
   Book: Book;
 
-  @ManyToOne(() => User, (User) => User.id, {
+  @ManyToOne(() => User, (User) => User.rating, {
     nullable: false,
   })
+  @JoinColumn()
   User: User;
 }
