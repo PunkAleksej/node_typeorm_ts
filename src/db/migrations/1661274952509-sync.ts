@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class sync1661266102055 implements MigrationInterface {
-    name = 'sync1661266102055'
+export class sync1661274952509 implements MigrationInterface {
+    name = 'sync1661274952509'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
@@ -35,6 +35,13 @@ export class sync1661266102055 implements MigrationInterface {
             )
         `);
         await queryRunner.query(`
+            CREATE TABLE "author" (
+                "id" SERIAL NOT NULL,
+                "name" character varying NOT NULL,
+                CONSTRAINT "PK_5a0e79799d372fe56f2f3fa6871" PRIMARY KEY ("id")
+            )
+        `);
+        await queryRunner.query(`
             CREATE TABLE "book" (
                 "id" SERIAL NOT NULL,
                 "name" character varying,
@@ -45,13 +52,6 @@ export class sync1661266102055 implements MigrationInterface {
                 "cover" character varying,
                 "authorId" integer,
                 CONSTRAINT "PK_a3afef72ec8f80e6e5c310b28a4" PRIMARY KEY ("id")
-            )
-        `);
-        await queryRunner.query(`
-            CREATE TABLE "author" (
-                "id" SERIAL NOT NULL,
-                "name" character varying NOT NULL,
-                CONSTRAINT "PK_5a0e79799d372fe56f2f3fa6871" PRIMARY KEY ("id")
             )
         `);
         await queryRunner.query(`
@@ -115,10 +115,10 @@ export class sync1661266102055 implements MigrationInterface {
             DROP TABLE "book_genres_genre"
         `);
         await queryRunner.query(`
-            DROP TABLE "author"
+            DROP TABLE "book"
         `);
         await queryRunner.query(`
-            DROP TABLE "book"
+            DROP TABLE "author"
         `);
         await queryRunner.query(`
             DROP TABLE "rating"
