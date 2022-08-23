@@ -47,30 +47,28 @@ export class Book {
   })
   releasedAt: Date;
 
-  // @OneToOne(() => Photo, (Photo) => Photo.book, {
-  //   nullable: false,
-  // })
-  // cover: Photo;
+  @OneToOne(() => Photo)
+  cover: Photo;
 
-  @Column({
-    nullable: true,
-  })
-  cover: string;
+  // @Column({
+  //   nullable: true,
+  // })
+  // cover: string;
 
   @OneToMany(() => Rating, (Rating) => Rating.id, {
-    cascade: true
+    cascade: true,
   })
   @JoinTable()
   rating: Rating[];
 
   @ManyToOne(() => Author, (Author) => Author.books, {
-    cascade: true
+    cascade: true,
   })
   @JoinTable()
   author: Author;
 
   @ManyToMany(() => Genre, (Genre) => Genre.books, {
-    cascade: true
+    cascade: true,
   })
   @JoinTable()
   genres: Genre[];

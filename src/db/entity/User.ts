@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   AfterLoad,
+  JoinTable,
   OneToOne,
   OneToMany,
 } from 'typeorm';
@@ -72,7 +73,10 @@ export class User {
   })
   userPhoto: Photo;
 
-  @OneToMany(() => Rating, (User) => User.id)
+  @OneToMany(() => Rating, (User) => User.id, {
+    cascade: true,
+  })
+  @JoinTable()
   rating: Rating[];
 
   @AfterLoad()

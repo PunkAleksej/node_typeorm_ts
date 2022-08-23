@@ -1,6 +1,7 @@
 import { genreRepository, booksRepository, authorRepository, photoRepository } from '../index';
 import { connect } from '../dataSource';
 import { Book } from '../entity/Book';
+import { Photo } from '../entity/Photo';
 
 (async () => {
   await connect();
@@ -31,7 +32,6 @@ import { Book } from '../entity/Book';
       const genreInst = genreRepository.create({ name: createGenre });
       // eslint-disable-next-line no-await-in-loop
       genreRepository.save(genreInst);
-      
     }
   })();
 
@@ -283,37 +283,26 @@ import { Book } from '../entity/Book';
       releasedAt: new Date(2021, 12, 17),
     },
   ];
-  //const genres = await genreRepository.findOneBy(bookGanre);
 
-  //Таблица с книгами должна заполнятся после заполнения таблиц авторов и жанров,
-  //тогда все связи между таблицами строятся корректно.
-  //если все таблицы генерируются в одном файле, как здесь, то на создание таблицы книг приходится вешать таймаут на 1 секунду,
-  //чтобы она не ломала таблицу жанров. 
-
-  //либо создавать таблицы по одной, запуском отдельных файлов как: authorCreator.ts и genreCreator.ts
   const createBookTable = async () => {
     const genres = await genreRepository.find();
     const authors = await authorRepository.find();
-    const photo = await photoRepository.create();
     for (let i = 0; i < books.length; i++) {
       const book = books[i];
       const createdBook = new Book();
       createdBook.name = book.name;
       createdBook.author = authors.find((author) => author.name === book.author);
       createdBook.description = book.description;
-      createdBook.cover = book.cover;
       createdBook.paperPrice = book.paperPrice;
       createdBook.releasedAt = book.releasedAt;
       createdBook.price = book.price;
       createdBook.genres = book.genres.map((genre) => {
         return genres.find((g) => g.name === genre);
       });
-      const bookInst = booksRepository.create( createdBook );
+      const bookInst = booksRepository.create(createdBook);
       // eslint-disable-next-line no-await-in-loop
       await booksRepository.save(bookInst);
     }
-  }
+  };
   setTimeout(createBookTable, 1000);
 })();
-
-

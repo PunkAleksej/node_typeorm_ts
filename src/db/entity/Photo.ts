@@ -2,6 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   OneToOne,
+  Column,
 } from 'typeorm';
 import { Book } from './Book';
 import { User } from './User';
@@ -10,6 +11,12 @@ import { User } from './User';
 export class Photo {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    type: 'varchar',
+    nullable: true,
+  })
+  photo: string;
 
   @OneToOne(() => Book, (Book) => Book.id, {
     nullable: true,
