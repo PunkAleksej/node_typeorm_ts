@@ -15,8 +15,8 @@ import { Author } from '../../db/entity/Author';
 //   order?: 'ASC' | 'DESC';
 //   perPage: number;
 //   page: number;
-//   minPrice?: number;
-//   maxPrice?: number;
+//   priceFrom?: number;
+//   priceTo?: number;
 //   search?: string;
 //   genres?: string;
 // }
@@ -31,6 +31,7 @@ const booksFilter = async (req, res, next) => {
     const order = {
       [req.query.column]: req.query.order,
     };
+    console.log(req.query)
     const { search, perPage, priceFrom, priceTo, sortBy, genres } = req.query;
     // const take = req.query.perPage;
     // const page = +req.query.page;
@@ -40,9 +41,10 @@ const booksFilter = async (req, res, next) => {
 
     if (search) {
       const searchQuery = ILike(`%${search}%`);
+      console.log(searchQuery)
       where = [
         { name: searchQuery, price },
-        { author: searchQuery, price },
+        //{ author: searchQuery, price },
         // { desription: searchQuery, price },
       ];
     } else if (genres) {
@@ -69,31 +71,14 @@ const booksFilter = async (req, res, next) => {
       // skip,
       // take,
     });
-
     const byField = (field, reverse) => {
       return reverse
         ? (a, b) => (a[field] < b[field] ? 1 : -1)
         : (a, b) => (a[field] > b[field] ? 1 : -1);
     };
-    const test = false;
-    switch (sortBy) {
-    case 'Price':
-      books.sort(byField('price', test));
-      break;
-    case 'Author':
-      books.sort(byField((author) => (author.name), test));
-      break;
-    case 'Rating':
-      books.sort(byField('middleRating', false));
-      break;
-    case 'Date of issue':
-      books.sort(byField('releasedAt', false));
-      break;
-    case 'Name':
-      books.sort(byField('name', false));
-      break;
-    default:
-      break;
+    const test = true;
+    if (req.query.column === 'middleRating' ) {
+      books.sort(byField('middleRating', test));
     }
 
     if (!books) {

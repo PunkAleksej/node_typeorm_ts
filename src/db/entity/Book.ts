@@ -8,6 +8,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinColumn,
+  BeforeUpdate,
   AfterLoad,
 } from 'typeorm';
 import { Genre } from './Genre';
@@ -58,6 +59,7 @@ export class Book {
 
   @OneToMany(() => Rating, (Rating) => Rating.Book, {
     cascade: true,
+    eager: true,
   })
   @JoinColumn()
   rating: Rating[];
@@ -81,7 +83,7 @@ export class Book {
   //   }
   //   this.cover = `http://localhost:4000/static/${this.cover}`;
   // }
-
+  
   @AfterLoad()
   addDataForCover() {
     if (!this.rating.length) {
