@@ -1,66 +1,106 @@
-import { Between, ILike, FindManyOptions } from 'typeorm';
-import { RequestHandler } from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
-import { usersRepository } from '../../db/index';
-import { User } from '../../db/entity/User';
+import { RequestHandler } from 'express-serve-static-core';
+import { Between, FindManyOptions, ILike } from 'typeorm';
+import { Book } from '../../db/entity/Book';
+import createCustomError from '../../utils/createCustomError';
+import { booksRepository } from '../../db';
+import { Author } from '../../db/entity/Author';
 
-type ReqParams = {
-  id?: string;
-}
+// type ReqParams = {
+//   id: string;
+// }
 
-type ReqQuery = {
-  column?: string;
-  order?: string;
-  perPage?: number;
-  page?: number;
-  minDoB?: string;
-  maxDoB?: string;
-  search?: string;
-}
+// type ReqQuery = {
+//   column?: string;
+//   order?: 'ASC' | 'DESC';
+//   perPage: number;
+//   page: number;
+//   minPrice?: number;
+//   maxPrice?: number;
+//   search?: string;
+//   genres?: string;
+// }
 
-type ResBody = {
-  users: User[];
-  totalCount: number;
-}
-type ControllerType = RequestHandler<
-ReqParams, ResBody, object, ReqQuery>
+type ResBody = Book[];
 
-const booksFilter: ControllerType = async (req, res, next) => {
+// type ControllerType = RequestHandler<
+// ReqParams, ResBody, object, ReqQuery>
+
+const booksFilter = async (req, res, next) => {
   try {
     const order = {
       [req.query.column]: req.query.order,
     };
-    const take = req.query.perPage || null;
-    const page = +req.query.page || 1;
-    const skip = take ? (page - 1) * take : null;
-    const DoB = Between(
-      new Date(req.query.minDoB || 0),
-      new Date(req.query.maxDoB),
-    );
+    const { search, perPage, priceFrom, priceTo, sortBy, genres } = req.query;
+    // const take = req.query.perPage;
+    // const page = +req.query.page;
+    // const skip = take ? (page - 1) * take : null;
+    const price = Between(priceFrom || 0, priceTo || 10000);
+    let where: FindManyOptions<Book>['where'];
 
-    let where: FindManyOptions<User>['where'];
-
-    if (req.query.search) {
-      const search = ILike(`%${req.query.search}%`);
+    if (search) {
+      const searchQuery = ILike(`%${search}%`);
       where = [
-        { firstName: search, DoB },
-        { lastName: search, DoB },
-        { email: search, DoB },
+        { name: searchQuery, price },
+        { author: searchQuery, price },
+        // { desription: searchQuery, price },
       ];
-    } else {
+    } else if (genres) {
+      const genresArr = genres.split(',');
+      const arr = genresArr.map((genre) => {
+        return { id: Number(genre) };
+      });
       where = {
-        DoB,
+        genres: arr,
+        price,
       };
+    } else {
+      where = { price };
     }
 
-    const [users, totalCount] = await usersRepository.findAndCount({
+    const [books, totalCount] = await booksRepository.findAndCount({
+      relations: {
+        genres: true,
+        rating: true,
+        author: true,
+      },
       where,
       order,
-      take,
-      skip,
+      // skip,
+      // take,
     });
 
-    return res.status(StatusCodes.OK).json({ users, totalCount });
+    const byField = (field, reverse) => {
+      return reverse
+        ? (a, b) => (a[field] < b[field] ? 1 : -1)
+        : (a, b) => (a[field] > b[field] ? 1 : -1);
+    };
+    const test = false;
+    switch (sortBy) {
+    case 'Price':
+      books.sort(byField('price', test));
+      break;
+    case 'Author':
+      books.sort(byField((author) => (author.name), test));
+      break;
+    case 'Rating':
+      books.sort(byField('middleRating', false));
+      break;
+    case 'Date of issue':
+      books.sort(byField('releasedAt', false));
+      break;
+    case 'Name':
+      books.sort(byField('name', false));
+      break;
+    default:
+      break;
+    }
+
+    if (!books) {
+      throw createCustomError(StatusCodes.NOT_FOUND, 'books not found');
+    }
+
+    return res.status(StatusCodes.OK).json(books);
   } catch (err) {
     next(err);
   }

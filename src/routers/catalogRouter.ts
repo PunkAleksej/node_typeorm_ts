@@ -12,7 +12,7 @@ import getGenreList from '../controllers/catalog/getGenresList';
 
 const catalogRouter = Router();
 
-catalogRouter.post('/filter', validatorCreate(signUpSchema), booksFilter);
+catalogRouter.post('/filter', booksFilter);
 
 catalogRouter.post('/create', validatorCreate(createBookSchema), createBook);
 

@@ -27,6 +27,15 @@ const getBook: ControllerType = async (request, response, next) => {
         id: bookId,
       },
     });
+    // let ratingSum = 0;
+    // const RatingList = [];
+    // book.rating.forEach((elem) => {
+    //   RatingList.push(elem.bookRating);
+    //   ratingSum += elem.bookRating;
+    // });
+    // const middleRating = ratingSum / RatingList.length;
+    // book.middleRating = middleRating;
+
     response.status(StatusCodes.ACCEPTED).json({ book });
   } catch (err) {
     next(err);

@@ -8,6 +8,7 @@ import {
   OneToMany,
   ManyToMany,
   JoinColumn,
+  AfterLoad,
 } from 'typeorm';
 import { Genre } from './Genre';
 import { Rating } from './Rating';
@@ -41,7 +42,7 @@ export class Book {
   paperPrice: number;
 
   @CreateDateColumn({
-    select: false,
+    select: true,
   })
   releasedAt: Date;
 
@@ -49,6 +50,11 @@ export class Book {
     nullable: true,
   })
   cover: string;
+
+  @Column({
+    nullable: true,
+  })
+  middleRating: number;
 
   @OneToMany(() => Rating, (Rating) => Rating.Book, {
     cascade: true,
@@ -75,4 +81,19 @@ export class Book {
   //   }
   //   this.cover = `http://localhost:4000/static/${this.cover}`;
   // }
+
+  @AfterLoad()
+  addDataForCover() {
+    if (!this.rating.length) {
+      this.middleRating = 0;
+      return;
+    }
+    let ratingSum = 0;
+    const RatingList = [];
+    this.rating.forEach((elem) => {
+      RatingList.push(elem.bookRating);
+      ratingSum += elem.bookRating;
+    });
+    this.middleRating = ratingSum / RatingList.length;
+  }
 }
