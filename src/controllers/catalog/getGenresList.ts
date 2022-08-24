@@ -4,7 +4,7 @@ import { genreRepository } from '../../db';
 import { Genre } from '../../db/entity/Genre';
 
 type Response = {
-    genres: Genre[];
+  genres: Genre[];
 }
 
 type ControllerType = RequestHandler<

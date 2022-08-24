@@ -27,7 +27,6 @@ const getBook: ControllerType = async (request, response, next) => {
         id: bookId,
       },
     });
-    console.log(book)
     response.status(StatusCodes.ACCEPTED).json({ book });
   } catch (err) {
     next(err);

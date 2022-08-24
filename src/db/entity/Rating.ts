@@ -2,9 +2,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  JoinTable,
   ManyToOne,
-  ManyToMany,
   JoinColumn,
 } from 'typeorm';
 import { Book } from './Book';
