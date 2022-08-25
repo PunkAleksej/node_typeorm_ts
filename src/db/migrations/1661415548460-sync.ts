@@ -1,9 +1,16 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class sync1661367176294 implements MigrationInterface {
-    name = 'sync1661367176294'
+export class sync1661415548460 implements MigrationInterface {
+    name = 'sync1661415548460'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`
+            CREATE TABLE "genre" (
+                "id" SERIAL NOT NULL,
+                "name" character varying,
+                CONSTRAINT "PK_0285d4f1655d080cfcf7d1ab141" PRIMARY KEY ("id")
+            )
+        `);
         await queryRunner.query(`
             CREATE TABLE "user" (
                 "id" SERIAL NOT NULL,
@@ -28,13 +35,6 @@ export class sync1661367176294 implements MigrationInterface {
             )
         `);
         await queryRunner.query(`
-            CREATE TABLE "author" (
-                "id" SERIAL NOT NULL,
-                "name" character varying NOT NULL,
-                CONSTRAINT "PK_5a0e79799d372fe56f2f3fa6871" PRIMARY KEY ("id")
-            )
-        `);
-        await queryRunner.query(`
             CREATE TABLE "book" (
                 "id" SERIAL NOT NULL,
                 "name" character varying,
@@ -49,10 +49,10 @@ export class sync1661367176294 implements MigrationInterface {
             )
         `);
         await queryRunner.query(`
-            CREATE TABLE "genre" (
+            CREATE TABLE "author" (
                 "id" SERIAL NOT NULL,
-                "name" character varying,
-                CONSTRAINT "PK_0285d4f1655d080cfcf7d1ab141" PRIMARY KEY ("id")
+                "name" character varying NOT NULL,
+                CONSTRAINT "PK_5a0e79799d372fe56f2f3fa6871" PRIMARY KEY ("id")
             )
         `);
         await queryRunner.query(`
@@ -116,19 +116,19 @@ export class sync1661367176294 implements MigrationInterface {
             DROP TABLE "book_genres_genre"
         `);
         await queryRunner.query(`
-            DROP TABLE "genre"
+            DROP TABLE "author"
         `);
         await queryRunner.query(`
             DROP TABLE "book"
-        `);
-        await queryRunner.query(`
-            DROP TABLE "author"
         `);
         await queryRunner.query(`
             DROP TABLE "rating"
         `);
         await queryRunner.query(`
             DROP TABLE "user"
+        `);
+        await queryRunner.query(`
+            DROP TABLE "genre"
         `);
     }
 

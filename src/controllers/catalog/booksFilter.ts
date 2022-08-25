@@ -4,48 +4,44 @@ import { Between, FindManyOptions, ILike } from 'typeorm';
 import { Book } from '../../db/entity/Book';
 import createCustomError from '../../utils/createCustomError';
 import { booksRepository } from '../../db';
-import { Author } from '../../db/entity/Author';
 
-// type ReqParams = {
-//   id: string;
-// }
+type ReqParams = {
+  id: string;
+}
 
-// type ReqQuery = {
-//   column?: string;
-//   order?: 'ASC' | 'DESC';
-//   perPage: number;
-//   page: number;
-//   priceFrom?: number;
-//   priceTo?: number;
-//   search?: string;
-//   genres?: string;
-// }
+type ReqQuery = {
+  column?: string;
+  order?: 'ASC' | 'DESC';
+  perPage: number;
+  page: number;
+  priceFrom?: number;
+  priceTo?: number;
+  name?: string;
+  genres?: string;
+  author?: string;
+}
 
 type ResBody = Book[];
 
-// type ControllerType = RequestHandler<
-// ReqParams, ResBody, object, ReqQuery>
+type ControllerType = RequestHandler<
+ReqParams, ResBody, object, ReqQuery>
 
-const booksFilter = async (req, res, next) => {
+const booksFilter: ControllerType = async (req, res, next) => {
   try {
     const order = {
       [req.query.column]: req.query.order,
     };
-    console.log(req.query)
-    const { search, perPage, priceFrom, priceTo, sortBy, genres } = req.query;
+    const { name, priceFrom, priceTo, author, genres } = req.query;
     // const take = req.query.perPage;
     // const page = +req.query.page;
     // const skip = take ? (page - 1) * take : null;
     const price = Between(priceFrom || 0, priceTo || 10000);
     let where: FindManyOptions<Book>['where'];
 
-    if (search) {
-      const searchQuery = ILike(`%${search}%`);
-      console.log(searchQuery)
+    if (name) {
+      const searchQuery = ILike(`%${name}%`);
       where = [
         { name: searchQuery, price },
-        //{ author: searchQuery, price },
-        // { desription: searchQuery, price },
       ];
     } else if (genres) {
       const genresArr = genres.split(',');
@@ -54,6 +50,15 @@ const booksFilter = async (req, res, next) => {
       });
       where = {
         genres: arr,
+        price,
+      };
+    } else if (author) {
+      const authorsArr = author.split(',');
+      const arr = authorsArr.map((author) => {
+        return { name: String(author) };
+      });
+      where = {
+        author: arr,
         price,
       };
     } else {
@@ -71,14 +76,15 @@ const booksFilter = async (req, res, next) => {
       // skip,
       // take,
     });
+
     const byField = (field, reverse) => {
       return reverse
         ? (a, b) => (a[field] < b[field] ? 1 : -1)
         : (a, b) => (a[field] > b[field] ? 1 : -1);
     };
-    const test = true;
-    if (req.query.column === 'middleRating' ) {
-      books.sort(byField('middleRating', test));
+    const sortPriority = req.query.order === 'ASC';
+    if (req.query.column === 'middleRating') {
+      books.sort(byField('middleRating', sortPriority));
     }
 
     if (!books) {
