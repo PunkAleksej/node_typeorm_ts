@@ -17,7 +17,7 @@ type ReqQuery = {
   priceFrom?: number;
   priceTo?: number;
   name?: string;
-  genres?: string;
+  selectGenres?: string;
   author?: string;
 }
 
@@ -31,7 +31,7 @@ const booksFilter: ControllerType = async (req, res, next) => {
     const order = {
       [req.query.column]: req.query.order,
     };
-    const { name, priceFrom, priceTo, author, genres } = req.query;
+    const { name, priceFrom, priceTo, author, selectGenres } = req.query;
     // const take = req.query.perPage;
     // const page = +req.query.page;
     // const skip = take ? (page - 1) * take : null;
@@ -43,8 +43,8 @@ const booksFilter: ControllerType = async (req, res, next) => {
       where = [
         { name: searchQuery, price },
       ];
-    } else if (genres) {
-      const genresArr = genres.split(',');
+    } else if (selectGenres) {
+      const genresArr = selectGenres.split(',');
       const arr = genresArr.map((genre) => {
         return { id: Number(genre) };
       });
