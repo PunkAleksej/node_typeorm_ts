@@ -76,16 +76,16 @@ export class Book {
   @JoinTable()
   genres: Genre[];
 
-  // @AfterLoad()
-  // addDataForCover() {
-  //   if (this.cover === '') {
-  //     return;
-  //   }
-  //   this.cover = `http://localhost:4000/static/${this.cover}`;
-  // }
-  
   @AfterLoad()
   addDataForCover() {
+    if (this.cover === '') {
+      return;
+    }
+    this.cover = `http://localhost:4000/book-static/${this.cover}`;
+  }
+  
+  @AfterLoad()
+  addDataForMiddleRating() {
     if (!this.rating.length) {
       this.middleRating = 0;
       return;

@@ -13,6 +13,7 @@ app.use(cors({
   origin: 'http://localhost:3000',
 }));
 
+app.use('/book-static', express.static(path.resolve(__dirname, '../bookPublic')));
 app.use('/static', express.static(path.resolve(__dirname, '../public')));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json({
