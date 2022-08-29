@@ -10,7 +10,7 @@ type ReqParams = {
 }
 
 type ReqQuery = {
-  column?: string;
+  sortBy?: string;
   order?: 'ASC' | 'DESC';
   perPage: number;
   page: number;
@@ -29,9 +29,9 @@ ReqParams, ResBody, object, ReqQuery>
 const booksFilter: ControllerType = async (req, res, next) => {
   try {
     const order = {
-      [req.query.column]: req.query.order,
+      [req.query.sortBy]: req.query.order,
     };
-    const { name, priceFrom, priceTo, author, selectGenres } = req.query;
+    const { name, priceFrom, priceTo, selectGenres, author } = req.query;
     // const take = req.query.perPage;
     // const page = +req.query.page;
     // const skip = take ? (page - 1) * take : null;
@@ -83,14 +83,12 @@ const booksFilter: ControllerType = async (req, res, next) => {
         : (a, b) => (a[field] > b[field] ? 1 : -1);
     };
     const sortPriority = req.query.order === 'ASC';
-    if (req.query.column === 'middleRating') {
+    if (req.query.sortBy === 'middleRating') {
       books.sort(byField('middleRating', sortPriority));
     }
-
     if (!books) {
       throw createCustomError(StatusCodes.NOT_FOUND, 'books not found');
     }
-
     return res.status(StatusCodes.OK).json(books);
   } catch (err) {
     next(err);
