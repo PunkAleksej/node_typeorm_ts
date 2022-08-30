@@ -20,7 +20,6 @@ Record<string, never>, Response, RequestBody, Record<string, never>>
 const createBook: ControllerType = async (request, response, next) => {
   try {
     const { name, description, price } = request.body;
-
     const newBook = new Book();
     newBook.name = name;
     newBook.description = description;

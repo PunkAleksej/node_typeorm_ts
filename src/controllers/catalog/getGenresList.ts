@@ -25,7 +25,7 @@ const getGenreList: ControllerType = async (request, response, next) => {
       user = await usersRepository.findOneBy({ id });
     }
     const genres = await genreRepository.find();
-    //const books = await booksRepository.find();
+    // const books = await booksRepository.find();
     const books = await booksRepository.find({
       relations: {
         genres: true,
@@ -33,6 +33,10 @@ const getGenreList: ControllerType = async (request, response, next) => {
         rating: true,
       },
     });
+    const byField = (field) => {
+      return (a, b) => (a[field] < b[field] ? 1 : -1);
+    };
+    books.sort(byField('middleRating'));
     response.status(StatusCodes.ACCEPTED).json({ genres, books, user });
   } catch (err) {
     next(err);

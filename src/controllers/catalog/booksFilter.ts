@@ -29,7 +29,7 @@ ReqParams, ResBody, object, ReqQuery>
 const booksFilter: ControllerType = async (req, res, next) => {
   try {
     const order = {
-      [req.query.sortBy]: req.query.order,
+      [req.query.sortBy]: 'ASC',
     };
     const { name, priceFrom, priceTo, selectGenres, author } = req.query;
     // const take = req.query.perPage;
@@ -44,7 +44,8 @@ const booksFilter: ControllerType = async (req, res, next) => {
         { name: searchQuery, price },
       ];
     } else if (selectGenres) {
-      const genresArr = selectGenres.split(',');
+      const stringGenres = selectGenres.toString();
+      const genresArr = stringGenres.split(',');
       const arr = genresArr.map((genre) => {
         return { id: Number(genre) };
       });
@@ -78,14 +79,13 @@ const booksFilter: ControllerType = async (req, res, next) => {
     });
 
     const byField = (field, reverse) => {
-      return reverse
-        ? (a, b) => (a[field] < b[field] ? 1 : -1)
-        : (a, b) => (a[field] > b[field] ? 1 : -1);
+      return (a, b) => (a[field] < b[field] ? 1 : -1);
     };
-    const sortPriority = req.query.order === 'ASC';
+    const sortPriority = 1; // req.query.order === 'ASC';
     if (req.query.sortBy === 'middleRating') {
       books.sort(byField('middleRating', sortPriority));
     }
+
     if (!books) {
       throw createCustomError(StatusCodes.NOT_FOUND, 'books not found');
     }
