@@ -18,7 +18,7 @@ catalogRouter.post('/create', validatorCreate(createBookSchema), createBook);
 
 catalogRouter.post('/rating', validatorCreate(ratingSchema), jwtCheker, createRating);
 
-catalogRouter.post('/getBook', getBook);
+catalogRouter.get('/getBook', getBook);
 
 catalogRouter.get('/getGenres', getGenreList);
 export default catalogRouter;
