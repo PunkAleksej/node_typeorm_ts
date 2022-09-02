@@ -8,12 +8,12 @@ import {
   OneToMany,
   ManyToMany,
   JoinColumn,
-  BeforeUpdate,
   AfterLoad,
 } from 'typeorm';
 import { Genre } from './Genre';
 import { Rating } from './Rating';
 import { Author } from './Author';
+import { Cart } from './Cart';
 
 @Entity()
 export class Book {
@@ -64,6 +64,13 @@ export class Book {
   @JoinColumn()
   rating: Rating[];
 
+  @OneToMany(() => Cart, (Cart) => Cart.Book, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  cart: Cart[];
+
   @ManyToOne(() => Author, (Author) => Author.books, {
     cascade: true,
   })
@@ -83,7 +90,7 @@ export class Book {
     }
     this.cover = `http://localhost:4000/book-static/${this.cover}`;
   }
-  
+
   @AfterLoad()
   addDataForMiddleRating() {
     if (!this.rating.length) {

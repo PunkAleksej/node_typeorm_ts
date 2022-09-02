@@ -9,6 +9,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Rating } from './Rating';
+import { Cart } from './Cart';
 
 @Entity()
 export class User {
@@ -71,6 +72,13 @@ export class User {
   })
   @JoinTable()
   rating: Rating[];
+
+  @OneToMany(() => Cart, (Cart) => Cart.User, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinTable()
+  cart: Cart[];
 
   @AfterLoad()
   addDataForPhoto() {
