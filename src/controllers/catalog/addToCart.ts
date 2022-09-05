@@ -2,6 +2,7 @@ import { RequestHandler } from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
 import { booksRepository, cartRepository, usersRepository } from '../../db/index';
 import { Cart } from '../../db/entity/Cart';
+import { User } from '../../db/entity/User';
 
 type RequestBody = {
   bookId: string;
@@ -10,7 +11,7 @@ type RequestBody = {
 }
 
 type Response = {
-  cart: Cart;
+  user: User;
 }
 
 type ControllerType = RequestHandler<
@@ -42,9 +43,10 @@ const addToCart: ControllerType = async (request, response, next) => {
     cartToUpdate.booksQuantity = booksQuantity;
     cartRepository.create(cartToUpdate);
     await cartRepository.save(cartToUpdate);
+    const updatedUser = await usersRepository.findOneBy({ id: userId });
     return response
       .status(StatusCodes.CREATED)
-      .json({ cart: cartToUpdate });
+      .json({ user: updatedUser });
   } catch (err) {
     next(err);
   }

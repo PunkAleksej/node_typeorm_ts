@@ -9,12 +9,10 @@ type RequestUser = {
 
 type ControllerType = RequestHandler<
 Record<string, never>, Book[], RequestUser, Record<string, never>>
-
 const getBooksById: ControllerType = async (request, response, next) => {
   try {
     const bookId = request.body.bookId;
-    const targetBooks = bookId.split(',').map((id) => +id);
-    console.log(targetBooks)
+    const targetBooks = bookId.split(',').map((id) => ({ id: +id }));
     const book = await booksRepository.find({
       relations: {
         genres: true,
@@ -22,9 +20,7 @@ const getBooksById: ControllerType = async (request, response, next) => {
         rating: true,
         cart: true,
       },
-      where: {
-        id: 1,
-      },
+      where: targetBooks,
     });
     response.status(StatusCodes.ACCEPTED).json(book);
   } catch (err) {

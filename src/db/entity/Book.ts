@@ -14,6 +14,7 @@ import { Genre } from './Genre';
 import { Rating } from './Rating';
 import { Author } from './Author';
 import { Cart } from './Cart';
+import { Favorite } from './Favorite';
 
 @Entity()
 export class Book {
@@ -70,6 +71,13 @@ export class Book {
   })
   @JoinColumn()
   cart: Cart[];
+
+  @OneToMany(() => Favorite, (Favorite) => Favorite.Book, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn()
+  favorite: Favorite[];
 
   @ManyToOne(() => Author, (Author) => Author.books, {
     cascade: true,

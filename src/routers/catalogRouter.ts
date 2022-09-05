@@ -11,6 +11,8 @@ import getBook from '../controllers/catalog/getBook';
 import getGenreList from '../controllers/catalog/getGenresList';
 import addToCart from '../controllers/catalog/addToCart';
 import getBooksById from '../controllers/catalog/getBooksById';
+import addToFavorite from '../controllers/catalog/addToFavorite';
+import addBookInFavoriteSchema from '../middlewares/validators/schemas/addBookInFavoriteSchema';
 
 const catalogRouter = Router();
 
@@ -22,9 +24,12 @@ catalogRouter.post('/rating', validatorCreate(ratingSchema), jwtCheker, createRa
 
 catalogRouter.post('/cart', validatorCreate(addBookInCartSchema), jwtCheker, addToCart);
 
+catalogRouter.post('/favorite', validatorCreate(addBookInFavoriteSchema), jwtCheker, addToFavorite);
+
 catalogRouter.post('/cart-books', jwtCheker, getBooksById);
 
 catalogRouter.get('/getBook', getBook);
 
 catalogRouter.get('/getGenres', getGenreList);
+
 export default catalogRouter;
