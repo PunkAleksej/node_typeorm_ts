@@ -4,6 +4,7 @@ import {
   ManyToOne,
   JoinColumn,
   Column,
+  AfterLoad,
 } from 'typeorm';
 import { Book } from './Book';
 import { User } from './User';
@@ -19,6 +20,12 @@ export class Cart {
   })
   booksQuantity: number;
 
+  @Column({
+    nullable: false,
+    type: 'int',
+  })
+  bookId: number;
+
   @ManyToOne(() => Book, (Book) => Book.cart, {
     nullable: false,
   })
@@ -29,4 +36,8 @@ export class Cart {
   })
   @JoinColumn()
   User: User;
+
+  addDataForCover() {
+    this.bookId = this.Book.id;
+  }
 }

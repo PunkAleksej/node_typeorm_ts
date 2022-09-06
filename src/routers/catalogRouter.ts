@@ -13,6 +13,9 @@ import addToCart from '../controllers/catalog/addToCart';
 import getBooksById from '../controllers/catalog/getBooksById';
 import addToFavorite from '../controllers/catalog/addToFavorite';
 import addBookInFavoriteSchema from '../middlewares/validators/schemas/addBookInFavoriteSchema';
+import deleteFromFavorite from '../controllers/catalog/deleteFromFavorite';
+import deleteFromFavoriteSchema from '../middlewares/validators/schemas/deleteFromFavoriteSchema';
+import deleteFromCart from '../controllers/catalog/deleteFromCart';
 
 const catalogRouter = Router();
 
@@ -25,6 +28,10 @@ catalogRouter.post('/rating', validatorCreate(ratingSchema), jwtCheker, createRa
 catalogRouter.post('/cart', validatorCreate(addBookInCartSchema), jwtCheker, addToCart);
 
 catalogRouter.post('/favorite', validatorCreate(addBookInFavoriteSchema), jwtCheker, addToFavorite);
+
+catalogRouter.post('/delete-favorite', validatorCreate(deleteFromFavoriteSchema), jwtCheker, deleteFromFavorite);
+
+catalogRouter.post('/delete-cart', validatorCreate(deleteFromFavoriteSchema), jwtCheker, deleteFromCart);
 
 catalogRouter.post('/cart-books', jwtCheker, getBooksById);
 

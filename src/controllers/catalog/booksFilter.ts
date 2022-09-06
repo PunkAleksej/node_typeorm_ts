@@ -31,10 +31,11 @@ const booksFilter: ControllerType = async (req, res, next) => {
     const order = {
       [req.query.sortBy]: 'ASC',
     };
+
     const { name, priceFrom, priceTo, selectGenres, author } = req.query;
-    // const take = req.query.perPage;
-    // const page = +req.query.page;
-    // const skip = take ? (page - 1) * take : null;
+    const take = 12;// req.query.perPage;
+    const page = +req.query.page || 1;
+    const skip = take ? (page - 1) * take : null;
     const price = Between(priceFrom || 0, priceTo || 10000);
     let where: FindManyOptions<Book>['where'];
 
@@ -65,7 +66,6 @@ const booksFilter: ControllerType = async (req, res, next) => {
     } else {
       where = { price };
     }
-
     const [books, totalCount] = await booksRepository.findAndCount({
       relations: {
         genres: true,
@@ -74,16 +74,14 @@ const booksFilter: ControllerType = async (req, res, next) => {
       },
       where,
       order,
-      // skip,
-      // take,
+      skip,
+      take,
     });
-
-    const byField = (field, reverse) => {
+    const byField = (field) => {
       return (a, b) => (a[field] < b[field] ? 1 : -1);
     };
-    const sortPriority = 1; // req.query.order === 'ASC';
     if (req.query.sortBy === 'middleRating') {
-      books.sort(byField('middleRating', sortPriority));
+      books.sort(byField('middleRating'));
     }
 
     if (!books) {

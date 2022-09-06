@@ -2,6 +2,7 @@ import { RequestHandler } from 'express-serve-static-core';
 import { StatusCodes } from 'http-status-codes';
 import { booksRepository, favoriteRepository, usersRepository } from '../../db/index';
 import { Favorite } from '../../db/entity/Favorite';
+import { User } from '../../db/entity/User';
 
 type RequestBody = {
   bookId: string;
@@ -9,7 +10,7 @@ type RequestBody = {
 }
 
 type Response = {
-  favorite: Favorite;
+  user: User;
 }
 
 type ControllerType = RequestHandler<
@@ -39,9 +40,10 @@ const addToFavorite: ControllerType = async (request, response, next) => {
     favoriteToUpdate.User = await usersRepository.findOneBy({ id: userId });
     favoriteRepository.create(favoriteToUpdate);
     await favoriteRepository.save(favoriteToUpdate);
+    const updatedUser = await usersRepository.findOneBy({ id: userId });
     return response
       .status(StatusCodes.CREATED)
-      .json({ favorite: favoriteToUpdate });
+      .json({ user: updatedUser });
   } catch (err) {
     next(err);
   }

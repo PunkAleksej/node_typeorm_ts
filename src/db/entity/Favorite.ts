@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  Column,
 } from 'typeorm';
 import { Book } from './Book';
 import { User } from './User';
@@ -11,6 +12,12 @@ import { User } from './User';
 export class Favorite {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({
+    nullable: false,
+    type: 'int',
+  })
+  bookId: number;
 
   @ManyToOne(() => Book, (Book) => Book.favorite, {
     nullable: false,
@@ -22,4 +29,8 @@ export class Favorite {
   })
   @JoinColumn()
   User: User;
+
+  addDataForCover() {
+    this.bookId = this.Book.id;
+  }
 }
