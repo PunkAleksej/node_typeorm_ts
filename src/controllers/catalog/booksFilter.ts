@@ -28,10 +28,12 @@ ReqParams, ResBody, object, ReqQuery>
 
 const booksFilter: ControllerType = async (req, res, next) => {
   try {
+    if (req.query.sortBy === 'author') {
+      req.query.sortBy = 'name';
+    }
     const order = {
       [req.query.sortBy]: 'ASC',
     };
-
     const { name, priceFrom, priceTo, selectGenres, author } = req.query;
     const take = 12;// req.query.perPage;
     const page = +req.query.page || 1;
