@@ -28,9 +28,6 @@ ReqParams, ResBody, object, ReqQuery>
 
 const booksFilter: ControllerType = async (req, res, next) => {
   try {
-    if (req.query.sortBy === 'author') {
-      req.query.sortBy = 'name';
-    }
     const order = {
       [req.query.sortBy]: 'ASC',
     };
@@ -57,14 +54,14 @@ const booksFilter: ControllerType = async (req, res, next) => {
         price,
       };
     } else if (author) {
-      const authorsArr = author.split(',');
-      const arr = authorsArr.map((author) => {
-        return { name: String(author) };
-      });
-      where = {
-        author: arr,
-        price,
-      };
+      // const authorsArr = author.split(',');
+      // const arr = authorsArr.map((author) => {
+      //   return { name: String(author) };
+      // });
+      // where = {
+      //   author: arr,
+      //   price,
+      // };
     } else {
       where = { price };
     }
@@ -72,7 +69,6 @@ const booksFilter: ControllerType = async (req, res, next) => {
       relations: {
         genres: true,
         rating: true,
-        author: true,
       },
       where,
       order,

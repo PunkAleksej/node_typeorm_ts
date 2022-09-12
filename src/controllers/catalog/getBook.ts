@@ -16,7 +16,6 @@ const getBook: ControllerType = async (request, response, next) => {
     const book = await booksRepository.findOne({
       relations: {
         genres: true,
-        author: true,
         rating: true,
       },
       where: {

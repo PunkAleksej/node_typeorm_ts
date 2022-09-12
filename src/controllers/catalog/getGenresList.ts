@@ -19,7 +19,6 @@ const getGenreList: ControllerType = async (request, response, next) => {
     const books = await booksRepository.find({
       relations: {
         genres: true,
-        author: true,
         rating: true,
       },
     });

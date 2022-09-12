@@ -34,26 +34,26 @@ import { Book } from '../entity/Book';
     }
   })();
 
-  const createAuthors = [
-    'C. S. Lewis',
-    'Morgan Housel',
-    'Oscar Wilde',
-    'Mark Manson',
-    'J. R. R. Tolkien',
-    'Morgan Black',
-    'C. S. Stanford',
-    'Cisco Gomez',
-    'Dale Carnegie',
-    'Herman Melville',
-  ];
-  (() => {
-    for (let i = 0; i < createAuthors.length; i++) {
-      const createAuthor = createAuthors[i];
-      const authorInst = authorRepository.create({ name: createAuthor });
-      // eslint-disable-next-line no-await-in-loop
-      authorRepository.save(authorInst);
-    }
-  })();
+  // const createAuthors = [
+  //   'C. S. Lewis',
+  //   'Morgan Housel',
+  //   'Oscar Wilde',
+  //   'Mark Manson',
+  //   'J. R. R. Tolkien',
+  //   'Morgan Black',
+  //   'C. S. Stanford',
+  //   'Cisco Gomez',
+  //   'Dale Carnegie',
+  //   'Herman Melville',
+  // ];
+  // (() => {
+  //   for (let i = 0; i < createAuthors.length; i++) {
+  //     const createAuthor = createAuthors[i];
+  //     const authorInst = authorRepository.create({ name: createAuthor });
+  //     // eslint-disable-next-line no-await-in-loop
+  //     authorRepository.save(authorInst);
+  //   }
+  // })();
 
   const books = [
     {
@@ -515,7 +515,7 @@ import { Book } from '../entity/Book';
       const book = books[i];
       const createdBook = new Book();
       createdBook.name = book.name;
-      createdBook.author = authors.find((author) => author.name === book.author);
+      createdBook.author = book.author; //  authors.find((author) => author.name === book.author);
       createdBook.description = book.description;
       createdBook.cover = book.cover;
       createdBook.paperPrice = book.paperPrice;

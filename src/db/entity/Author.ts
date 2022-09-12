@@ -17,6 +17,6 @@ export class Author {
   })
   name: string;
 
-  @OneToMany(() => Book, (book) => book.author)
-  books: Book[];
+  // @OneToMany(() => Book, (book) => book.author)
+  // books: Book[];
 }

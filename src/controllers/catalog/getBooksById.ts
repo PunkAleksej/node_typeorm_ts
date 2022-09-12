@@ -16,7 +16,6 @@ const getBooksById: ControllerType = async (request, response, next) => {
     const book = await booksRepository.find({
       relations: {
         genres: true,
-        author: true,
         rating: true,
         cart: true,
       },

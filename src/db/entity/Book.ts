@@ -79,11 +79,15 @@ export class Book {
   @JoinColumn()
   favorite: Favorite[];
 
-  @ManyToOne(() => Author, (Author) => Author.books, {
-    cascade: true,
+  // @ManyToOne(() => Author, (Author) => Author.books, {
+  //   cascade: true,
+  // })
+  // @JoinColumn()
+  // author: Author;
+  @Column({
+    nullable: false,
   })
-  @JoinColumn()
-  author: Author;
+  author: string;
 
   @ManyToMany(() => Genre, (Genre) => Genre.books, {
     cascade: true,
